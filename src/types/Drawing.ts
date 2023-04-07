@@ -6,14 +6,14 @@ export interface Vertex {
   y: number;
 }
 
-export interface Edge {
+export interface IDEdge {
   startID: number;
   endID: number;
 }
 
 export interface PolygonMesh {
   vertices: Vertex[];
-  edges: Edge[];
+  edges: IDEdge[];
 }
 
 export const testMesh: PolygonMesh = {
@@ -38,5 +38,8 @@ export const testMesh: PolygonMesh = {
 export function getFreeID(vertices: Vertex[]) {
   const ids = vertices.map((vertex) => vertex.id);
   const maxID = Math.max(...ids);
+  if (maxID === -Infinity) {
+    return 0;
+  }
   return maxID + 1;
 }

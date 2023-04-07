@@ -5,11 +5,10 @@ import { WindowData } from "../Window/Window";
 import { MouseData } from "../Window/Mouse";
 import { Vector } from "p5";
 import { InterfaceData } from "../FliesenPlanner";
-import { Polygon } from "./DBConverter";
+import { Polygon } from "../data/DBConverter";
 
-export function selectPoint() {
-  const { mouseScreenPos } = MouseData;
-  const { polygons } = InterfaceData;
+export function nearestPoint(screenPos: Vector) {
+  const { polygons } = InterfaceData.drawData;
 
   const points = polygons.flat();
 
@@ -22,7 +21,7 @@ export function selectPoint() {
       point: Vector
     ) => {
       const worldPos = toScreenPos(point);
-      const dist = worldPos.dist(mouseScreenPos);
+      const dist = worldPos.dist(screenPos);
       if (dist < acc.dist && dist < 30) {
         return { dist, point };
       }
@@ -33,5 +32,5 @@ export function selectPoint() {
     }
   );
 
-  if (nearestPoint.point) InterfaceData.selectedPoint = nearestPoint.point;
+  return nearestPoint.point;
 }

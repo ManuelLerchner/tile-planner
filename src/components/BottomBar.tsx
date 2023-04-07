@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { LengthUnit, LengthUnits } from "../types/LengthUnits";
-import { LengthContext } from "../App";
+import { GlobalContext } from "../App";
 
 export default function BottomBar() {
   const { drawLengthCM, setDrawLengthCM, setTileDims, tileDims } =
-    useContext(LengthContext);
+    useContext(GlobalContext);
   const [length_unit, setLengthUnit] = useState<number>(LengthUnits.cm.cm);
 
   const [tile_width_unit, setTileWidthUnit] = React.useState<number>(

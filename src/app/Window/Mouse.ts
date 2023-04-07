@@ -3,7 +3,7 @@ import { WindowData } from "./Window";
 import { toGamePos } from "./UnitConverter";
 import { P5CanvasInstance } from "react-p5-wrapper";
 import { InterfaceData } from "../FliesenPlanner";
-import { selectPoint } from "../sketch/SelectPoint";
+import { nearestPoint } from "../sketch/nearestPoint";
 
 export const MouseData = {
   mouseScreenPos: new Vector(0, 0),
@@ -34,16 +34,6 @@ export function mouseWheel(e: WheelEvent) {
   WindowData.scale *= 1 - signum * 0.1;
 }
 
-export function mouseDragged(e: MouseEvent) {
-  const { scale } = WindowData;
-  const { outside } = MouseData;
-
-  if (outside) return;
-
-  const vec = new Vector(e.movementX, -e.movementY);
-  vec.div(scale);
-  WindowData.transOffset.add(vec);
-}
 
 export function mousePressed(e: MouseEvent) {
   const { outside } = MouseData;
@@ -60,19 +50,6 @@ export function mousePressed(e: MouseEvent) {
     case 2:
       MouseData.mouseButton = "RIGHT";
       break;
-  }
-
-  if (MouseData.mouseButton === "LEFT") {
-    selectPoint();
-
-    const { newPoint } = InterfaceData;
-    if (newPoint) {
-      InterfaceData.onNewPointConfirmed(newPoint);
-      InterfaceData.newPoint = undefined;
-      console.log(InterfaceData.selectedPoint);
-      InterfaceData.selectedPoint = undefined;
-      return;
-    }
   }
 }
 
