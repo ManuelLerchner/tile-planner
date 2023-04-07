@@ -7,6 +7,7 @@ const fliesenOffset: Vector = new Vector(0, 0);
 export function showGrid(p5: P5CanvasInstance, tileDims: Vector) {
   p5.push();
   p5.strokeWeight(1);
+  p5.stroke(0);
 
   const startX = 1000;
 

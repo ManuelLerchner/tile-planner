@@ -1,5 +1,5 @@
 import { ReactP5Wrapper } from "react-p5-wrapper";
-import { FliesenPlanner } from "./sketch/FliesenPlanner";
+import { FliesenPlanner } from "./app/FliesenPlanner";
 import PageLayout from "./components/PageLayout";
 import { createContext, useState } from "react";
 

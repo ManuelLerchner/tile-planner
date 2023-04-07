@@ -36,7 +36,9 @@ export default function BottomBar() {
           }}
         >
           {Object.values(LengthUnits).map((lengthUnit) => (
-            <option value={lengthUnit.cm}>{lengthUnit.unit}</option>
+            <option key={lengthUnit.name} value={lengthUnit.cm}>
+              {lengthUnit.name}
+            </option>
           ))}
         </select>
       </div>
@@ -76,7 +78,9 @@ export default function BottomBar() {
           }}
         >
           {Object.values(LengthUnits).map((lengthUnit) => (
-            <option value={lengthUnit.cm}>{lengthUnit.unit}</option>
+            <option key={lengthUnit.name} value={lengthUnit.cm}>
+              {lengthUnit.name}
+            </option>
           ))}
         </select>
       </div>
