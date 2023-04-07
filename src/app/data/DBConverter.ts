@@ -1,8 +1,12 @@
 import { Vector } from "p5";
 import { PolygonMesh } from "../../types/Drawing";
 import { calculateConnectedComponents } from "../math/ConnedtedComponents";
+import { getAreaOfPolygon } from "../math/area";
 
-export type Polygon = Vector[];
+export type Polygon = {
+  vectors: Vector[];
+  area: number;
+};
 
 export type Edge = {
   start: Vector;
@@ -18,7 +22,7 @@ export type FundamentData = {
 export function DrawingToVectors(mesh: PolygonMesh): FundamentData {
   const connectedComponents = calculateConnectedComponents(mesh);
 
-  const polygons = Object.values(connectedComponents).map((members) => {
+  const polygonsVertices = Object.values(connectedComponents).map((members) => {
     const vectors = members
       .map((id) => {
         const vertex = mesh.vertices.find((vertex) => vertex.id === id);
@@ -28,6 +32,14 @@ export function DrawingToVectors(mesh: PolygonMesh): FundamentData {
       })
       .filter((vector) => vector !== undefined) as Vector[];
     return vectors;
+  });
+
+  const polygons: Polygon[] = polygonsVertices.map((vertices) => {
+    const area = getAreaOfPolygon(vertices);
+    return {
+      vectors: vertices,
+      area,
+    };
   });
 
   const edges: Edge[] = mesh.edges.flatMap((edge) => {

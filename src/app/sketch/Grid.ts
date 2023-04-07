@@ -1,7 +1,7 @@
 import { Vector } from "p5";
 import { P5CanvasInstance } from "react-p5-wrapper";
-import { toScreenPos } from "./Window/UnitConverter";
-import { InterfaceData } from "./FliesenPlanner";
+import { toScreenPos } from "../Window/UnitConverter";
+import { InterfaceData } from "../FliesenPlanner";
 
 export function showGrid(p5: P5CanvasInstance, tileDims: Vector) {
   const { tileOffset } = InterfaceData;

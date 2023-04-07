@@ -1,20 +1,18 @@
-import React from "react";
 import SideNav from "./SideNav";
 import TopBar from "./TopBar";
 import BottomBar from "./BottomBar";
+import React from "react";
 
-export default function PageLayout({
+export default function EditorLayout({
   children,
-  mainContentRef,
 }: {
   children: React.ReactNode;
-  mainContentRef: React.RefObject<any>;
 }) {
   return (
     <div className="flex h-screen ">
       <SideNav />
       <div className="flex flex-col flex-1 w-full">
-        <TopBar mainContentRef={mainContentRef} />
+        <TopBar />
         <main className="bg-gray-300 w-full h-full">{children}</main>
         <BottomBar />
       </div>

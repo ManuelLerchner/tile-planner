@@ -4,7 +4,11 @@ import { MouseData } from "../Window/Mouse";
 import { toScreenPos } from "../Window/UnitConverter";
 import { Vector } from "p5";
 
-export function drawLine(p5: P5CanvasInstance, drawLength: number) {
+export function drawLine(
+  p5: P5CanvasInstance,
+  drawLength: number,
+  showLimited: boolean
+) {
   const { selectedPoint } = InterfaceData;
   if (!selectedPoint) return;
 
@@ -28,10 +32,12 @@ export function drawLine(p5: P5CanvasInstance, drawLength: number) {
   p5.stroke(255, 0, 0);
   p5.strokeWeight(1);
   p5.line(startPoint.x, startPoint.y, mouseScreenPos.x, mouseScreenPos.y);
-  
+
   //draw line to rounded point
-  p5.stroke(0, 255, 0);
-  p5.strokeWeight(2);
-  p5.line(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
-  p5.ellipse(endPoint.x, endPoint.y, 5, 5);
+  if (showLimited) {
+    p5.stroke(0, 255, 0);
+    p5.strokeWeight(2);
+    p5.line(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+    p5.ellipse(endPoint.x, endPoint.y, 5, 5);
+  }
 }

@@ -10,7 +10,7 @@ import { Polygon } from "../data/DBConverter";
 export function nearestPoint(screenPos: Vector) {
   const { polygons } = InterfaceData.drawData;
 
-  const points = polygons.flat();
+  const points = polygons.map((poly) => poly.vectors).flat();
 
   const nearestPoint = points.reduce(
     (

@@ -1,9 +1,7 @@
 import { Vector } from "p5";
-import { WindowData } from "./Window";
-import { toGamePos } from "./UnitConverter";
 import { P5CanvasInstance } from "react-p5-wrapper";
-import { InterfaceData } from "../FliesenPlanner";
-import { nearestPoint } from "../sketch/nearestPoint";
+import { toGamePos } from "./UnitConverter";
+import { WindowData } from "./Window";
 
 export const MouseData = {
   mouseScreenPos: new Vector(0, 0),

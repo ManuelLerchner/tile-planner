@@ -1,5 +1,5 @@
 import { P5CanvasInstance } from "react-p5-wrapper";
-import { showGrid } from "./Grid";
+import { showGrid } from "./sketch/Grid";
 import { toGamePos, toScreenPos } from "./Window/UnitConverter";
 import {
   mouseWheel,
@@ -21,11 +21,11 @@ import {
 } from "./data/DBConverter";
 import { drawLine } from "./sketch/DrawLines";
 import { Mode } from "../types/Modes";
-import { nearestPoint } from "./sketch/nearestPoint";
+import { nearestPoint } from "./helper/nearestPoint";
 import { addNewPoint } from "./data/addPoint";
 import { deletePoint } from "./data/deletePoint";
 import { addEdge } from "./data/addEdge";
-import { nearestEdge } from "./sketch/nearestEdge";
+import { nearestEdge } from "./helper/nearestEdge";
 import { deleteEdge } from "./data/deleteEdge";
 
 export const InterfaceData = {
@@ -33,7 +33,7 @@ export const InterfaceData = {
   drawData: {} as FundamentData,
   selectedPoint: undefined as Vector | undefined,
   newPoint: undefined as Vector | undefined,
-  tileOffset: new Vector(0, 0),
+  tileOffset: new Vector() as Vector,
 };
 
 export function FliesenPlanner(p5: P5CanvasInstance) {
@@ -51,6 +51,16 @@ export function FliesenPlanner(p5: P5CanvasInstance) {
     InterfaceData.newPoint = undefined;
     InterfaceData.selectedPoint = undefined;
     InterfaceData.mesh = props.mesh as PolygonMesh;
+    InterfaceData.tileOffset = props.tileOffset as Vector;
+
+    if (InterfaceData.mesh.vertices.length === 0) {
+      InterfaceData.mesh.vertices.push({
+        id: 0,
+        x: 0,
+        y: 0,
+      });
+    }
+
     InterfaceData.drawData = DrawingToVectors(InterfaceData.mesh);
   };
 
@@ -72,8 +82,16 @@ export function FliesenPlanner(p5: P5CanvasInstance) {
     showGrid(p5, tileDims);
     drawPolygons(p5);
 
-    if (mode === "Marker") {
-      drawLine(p5, drawLength);
+    if (mode === "Marker" || mode === "Connect") {
+      drawLine(p5, drawLength, mode === "Marker");
+    }
+
+    //show selectedPoint
+    const { selectedPoint } = InterfaceData;
+    if (selectedPoint) {
+      const screenPos = toScreenPos(selectedPoint);
+      p5.fill(255, 0, 0);
+      p5.circle(screenPos.x, screenPos.y, 15);
     }
 
     // showMeasure();

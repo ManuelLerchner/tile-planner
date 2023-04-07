@@ -4,7 +4,7 @@ export const WindowData = {
   width: 0,
   height: 0,
   range: 20,
-  scale: 0.02,
+  scale: 0.03,
   transOffset: new Vector(0, 0),
 };
 
