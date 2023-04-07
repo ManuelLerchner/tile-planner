@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ReactP5Wrapper } from "react-p5-wrapper";
+import { FliesenPlanner } from "./sketch/FliesenPlanner";
+import PageLayout from "./components/PageLayout";
+import { createContext, useState } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export interface LengthContext {
+  drawLengthCM: number;
+  setDrawLengthCM: React.Dispatch<React.SetStateAction<number>>;
+  tileDims: [number, number];
+  setTileDims: React.Dispatch<React.SetStateAction<[number, number]>>;
 }
 
-export default App;
+export const LengthContext = createContext<LengthContext>({} as LengthContext);
+
+export function App() {
+  const [drawLengthCM, setDrawLengthCM] = useState(100);
+  const [tileDims, setTileDims] = useState<[number, number]>([30, 30]);
+
+  return (
+    <>
+      <LengthContext.Provider
+        value={{ drawLengthCM, setDrawLengthCM, tileDims, setTileDims }}
+      >
+        <PageLayout>
+          <div id="sketch-window" className="w-full h-full">
+            <ReactP5Wrapper
+              sketch={FliesenPlanner}
+              drawLength={drawLengthCM}
+              tileDims={tileDims}
+            />
+          </div>
+        </PageLayout>
+      </LengthContext.Provider>
+    </>
+  );
+}
