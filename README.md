@@ -1,6 +1,6 @@
 # Tile Planner
 
-A Project built for my Dad to help him figure out how to optimally lay out tiles for his customers.
+A Project built for my Dad to help him figure out how to optimally place tiles for his customers.
 
 Hosted at: [https://tile-planner.manuellerchner.de/](https://tile-planner.manuellerchner.de/)
 
