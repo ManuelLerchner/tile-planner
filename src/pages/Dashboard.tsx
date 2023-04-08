@@ -5,11 +5,13 @@ import { Project } from "../types/Project";
 import AddProjectCard from "../components/AddProjectCard";
 import { supabase } from "../database/subabaseClient";
 import { Box, CircularProgress } from "@mui/material";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const [data, setData] = useState<Project[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [earliestDate, setEarliestDate] = useState<Date>(new Date());
 
   const fetchData = async () => {
     setLoaded(false);
@@ -17,6 +19,8 @@ export default function Dashboard() {
       .from("projects")
       .select("id, name, description, created_at, image")
       .eq("user_id", user?.id)
+      .filter("created_at", "lt", earliestDate?.toISOString())
+      .limit(25)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -24,7 +28,14 @@ export default function Dashboard() {
       return;
     }
 
-    setData(data as Project[]);
+    const projectData = data as Project[];
+
+    setData((prev) => [...prev, ...projectData]);
+
+    if (projectData.length > 0) {
+      setEarliestDate(new Date(projectData[projectData.length - 1].created_at));
+    }
+
     setLoaded(true);
   };
 
@@ -58,6 +69,26 @@ export default function Dashboard() {
               onEdit={fetchData}
             />
           ))}
+
+        {loaded && data.length === 0 && (
+          <div className="flex flex-row justify-center items-center w-full h-full">
+            <h3 className="text-lg text-white font-semibold">
+              You have no projects yet ...
+            </h3>
+          </div>
+        )}
+
+        {loaded && data.length > 0 && (
+          <div
+            className="flex flex-row justify-center items-center w-full h-full cursor-pointer mt-8"
+            onClick={fetchData}
+          >
+            <h3 className="text-lg text-white font-semibold flex flex-col items-center hover:scale-110">
+              <CloudDownloadIcon />
+              <span className="ml-4">Load more ...</span>
+            </h3>
+          </div>
+        )}
       </div>
     </div>
   );

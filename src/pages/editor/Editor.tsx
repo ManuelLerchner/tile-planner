@@ -81,6 +81,7 @@ export function Editor() {
       tile_dims_y: tileDims[1],
       tile_offset_x: tileOffset.x,
       tile_offset_y: tileOffset.y,
+      tile_mode: tileMode,
       updated_at: new Date().toISOString(),
     });
 
@@ -113,7 +114,11 @@ export function Editor() {
   }, []);
 
   useEffect(() => {
-    fetchData();
+    const initialFetch = async () => {
+      await fetchData();
+      save();
+    };
+    initialFetch();
   }, []);
 
   const ComponentToPrint = forwardRef<HTMLDivElement>((props, ref) => {

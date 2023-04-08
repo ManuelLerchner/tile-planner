@@ -73,7 +73,5 @@ export function calculateConnectedComponents(drawing: PolygonMesh) {
     group_number++;
   }
 
-  console.log(connectedComponents);
-
   return connectedComponents;
 }

@@ -36,6 +36,17 @@ export default function AddProjectCard() {
       return;
     }
 
+    const { error: error2 } = await supabase.from("drawings").insert([
+      {
+        id: data.id,
+      },
+    ]);
+
+    if (error2) {
+      alert(error2.message);
+      return;
+    }
+
     navigate("/editor/" + data.id);
   };
 
@@ -82,7 +93,7 @@ export default function AddProjectCard() {
       </label>
 
       <div
-        className="card w-96 bg-gray-800 shadow-xl cursor-pointer hover:shadow-2xl hover:scale-[102%]"
+        className="card w-96 bg-gray-800 shadow-2xl cursor-pointer hover:scale-[102%]"
         onClick={() => {
           document.getElementById("modal")?.click();
         }}

@@ -127,7 +127,6 @@ export function TilePlanner(p5: P5CanvasInstance) {
           return;
         }
         const edge = nearestEdge(mouseScreenPos);
-        console.log(edge);
         if (edge) {
           deleteEdge(edge);
           return;
