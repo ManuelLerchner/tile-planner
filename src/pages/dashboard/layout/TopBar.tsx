@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function TopBar() {
   const { user, logout } = useAuth();
@@ -21,10 +21,12 @@ export default function TopBar() {
           className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
         >
           <li>
-            <a className="justify-between">{user.user_metadata.full_name}</a>
+            <span className="justify-between">
+              {user.user_metadata.full_name}
+            </span>
           </li>
           <li>
-            <a onClick={logout}>Logout</a>
+            <span onClick={logout}>Logout</span>
           </li>
         </ul>
       </div>

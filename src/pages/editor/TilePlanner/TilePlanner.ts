@@ -1,33 +1,31 @@
+import { Vector } from "p5";
 import { P5CanvasInstance } from "react-p5-wrapper";
-import { showGrid } from "./sketch/Grid";
-import { toGamePos, toScreenPos } from "./Window/UnitConverter";
 import {
-  mouseWheel,
   MouseData,
-  updateMousePos,
   mousePressed,
   mouseReleased,
+  mouseWheel,
+  updateMousePos,
 } from "./Window/Mouse";
+import { toGamePos, toScreenPos } from "./Window/UnitConverter";
 import { WindowData, getWindowSize } from "./Window/Window";
-import { Vector } from "p5";
+import { showGrid } from "./sketch/Grid";
 
-import { PolygonMesh, Vertex, getFreeID } from "../../../types/Drawing";
-import { drawPolygons } from "./sketch/PolygonDrawer";
+import { PolygonMesh } from "../../../types/Drawing";
+import { InteractMode } from "../../../types/InteractMode";
+import { TileMode } from "../../../types/TileMode";
 import {
   DrawingToVectors,
-  Edge,
-  FundamentData,
-  Polygon,
+  FundamentData
 } from "./data/DBConverter";
-import { drawLine } from "./sketch/DrawLines";
-import { InteractMode } from "../../../types/InteractMode";
-import { nearestPoint } from "./helper/nearestPoint";
-import { addNewPoint } from "./data/addPoint";
-import { deletePoint } from "./data/deletePoint";
 import { addEdge } from "./data/addEdge";
-import { nearestEdge } from "./helper/nearestEdge";
+import { addNewPoint } from "./data/addPoint";
 import { deleteEdge } from "./data/deleteEdge";
-import { TileMode } from "../../../types/TileMode";
+import { deletePoint } from "./data/deletePoint";
+import { nearestEdge } from "./helper/nearestEdge";
+import { nearestPoint } from "./helper/nearestPoint";
+import { drawLine } from "./sketch/DrawLines";
+import { drawPolygons } from "./sketch/PolygonDrawer";
 
 export const InterfaceData = {
   mesh: {} as PolygonMesh,

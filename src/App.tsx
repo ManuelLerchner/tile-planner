@@ -1,11 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Editor } from "./pages/editor/Editor";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import { AuthContext, AuthProvider } from "./components/providers/AuthProvider";
-import EditorLayout from "./pages/editor/layout/EditorLayout";
-import DashboardLayout from "./components/layout/DashboardLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { AuthProvider } from "./components/providers/AuthProvider";
+import Login from "./pages/Login";
+import Dashboard from "./pages/dashboard/Dashboard";
+import DashboardLayout from "./pages/dashboard/layout/DashboardLayout";
+import { Editor } from "./pages/editor/Editor";
 
 export function App() {
   return (
@@ -22,7 +21,7 @@ export function App() {
               <Route index element={<Dashboard />} />
             </Route>
 
-            <Route path={"/editor"} >
+            <Route path={"/editor"}>
               <Route path=":id" element={<Editor />} />
             </Route>
           </Route>

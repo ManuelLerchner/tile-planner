@@ -1,12 +1,9 @@
+import React from "react";
+import { InteractMode } from "../../../types/InteractMode";
+import { TileMode } from "../../../types/TileMode";
+import BottomBar from "./BottomBar";
 import SideNav from "./SideNav";
 import TopBar from "./TopBar";
-import BottomBar from "./BottomBar";
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { InteractMode } from "../../../types/InteractMode";
-import { PolygonMesh } from "../../../types/Drawing";
-import { Vector } from "p5";
-import { TileMode } from "../../../types/TileMode";
 
 export default function EditorLayout({
   mode,

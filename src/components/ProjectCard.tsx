@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Project } from "../types/Project";
-import { useNavigate } from "react-router-dom";
 import { Edit } from "@mui/icons-material";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Project } from "../types/Project";
 import EditProjectModal from "./EditProjectModal";
 
 export default function ProjectCard({

@@ -1,15 +1,11 @@
-import React, { useContext, useEffect } from "react";
-import ReactToPrint from "react-to-print";
-import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import HomeIcon from "@mui/icons-material/Home";
-import EditorLayout from "./EditorLayout";
+import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import SaveIcon from "@mui/icons-material/Save";
+import React from "react";
+import ReactToPrint from "react-to-print";
 
-import { Vector } from "p5";
-import { PolygonMesh } from "../../../types/Drawing";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../database/subabaseClient";
 import { Edit } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export default function TopBar({
   mainContentRef,

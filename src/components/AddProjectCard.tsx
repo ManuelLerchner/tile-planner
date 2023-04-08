@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Project } from "../types/Project";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AddIcon from "@mui/icons-material/Add";

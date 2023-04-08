@@ -1,9 +1,7 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useCallback, useEffect, useId, useState } from "react";
 
-import AddIcon from "@mui/icons-material/Add";
-import { supabase } from "../database/subabaseClient";
-import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../database/subabaseClient";
 
 export default function EditProjectModal({
   projectId,
@@ -19,7 +17,7 @@ export default function EditProjectModal({
   const modalID = useId();
   const navigate = useNavigate();
 
-  const fetchProject = async () => {
+  const fetchProject = useCallback(async () => {
     const { data, error } = await supabase
       .from("projects")
       .select("*")
@@ -33,7 +31,7 @@ export default function EditProjectModal({
 
     setProjectName(data.name);
     setProjectDescription(data.description);
-  };
+  }, [projectId]);
 
   const deleteProject = async () => {
     await supabase.from("projects").delete().eq("id", projectId);
@@ -71,7 +69,7 @@ export default function EditProjectModal({
 
   useEffect(() => {
     fetchProject();
-  }, []);
+  }, [fetchProject]);
 
   return (
     <>

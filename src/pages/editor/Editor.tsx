@@ -1,16 +1,16 @@
-import { ReactP5Wrapper } from "react-p5-wrapper";
-import { TilePlanner } from "./TilePlanner/TilePlanner";
-import { createContext, forwardRef, useEffect, useRef, useState } from "react";
-import { Modes, InteractMode } from "../../types/InteractMode";
-import { PolygonMesh } from "../../types/Drawing";
-import { Vector } from "p5";
-import EditorLayout from "./layout/EditorLayout";
-import { useParams } from "react-router-dom";
-import { supabase } from "../../database/subabaseClient";
 import { Box, CircularProgress } from "@mui/material";
-import EditProjectModal from "../../components/EditProjectModal";
 import * as htmlToImage from "html-to-image";
+import { Vector } from "p5";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { ReactP5Wrapper } from "react-p5-wrapper";
+import { useParams } from "react-router-dom";
+import EditProjectModal from "../../components/EditProjectModal";
+import { supabase } from "../../database/subabaseClient";
+import { PolygonMesh } from "../../types/Drawing";
+import { InteractMode, Modes } from "../../types/InteractMode";
 import { TileMode } from "../../types/TileMode";
+import { TilePlanner } from "./TilePlanner/TilePlanner";
+import EditorLayout from "./layout/EditorLayout";
 
 type RowEntry = {
   id: string;
@@ -45,7 +45,7 @@ export function Editor() {
   const [description, setDescription] = useState("");
   const [tileMode, setTileMode] = useState<TileMode>("Interlaced");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoaded(false);
     const { data } = await supabase
       .from("drawings")
@@ -63,9 +63,9 @@ export function Editor() {
       setDescription(row.projects.description);
       setTileMode(row.tile_mode);
     }
-  };
+  }, [id]);
 
-  const save = async () => {
+  const save = useCallback(async () => {
     var node = mainContentRef.current;
     if (!node) return;
     if (!loaded) return;
@@ -91,7 +91,7 @@ export function Editor() {
         image: dataUrl,
       })
       .eq("id", id);
-  };
+  }, [loaded, tileDims, tileOffset, tileMode, id, mesh]);
 
   // disable right click
   useEffect(() => {
@@ -109,17 +109,14 @@ export function Editor() {
   useEffect(() => {
     const interval = setInterval(() => {
       save();
-    }, 30000);
+      console.log("saved");
+    }, 20000);
     return () => clearInterval(interval);
-  }, []);
+  }, [save]);
 
   useEffect(() => {
-    const initialFetch = async () => {
-      await fetchData();
-      save();
-    };
-    initialFetch();
-  }, []);
+    fetchData();
+  }, [fetchData]);
 
   const ComponentToPrint = forwardRef<HTMLDivElement>((props, ref) => {
     return (

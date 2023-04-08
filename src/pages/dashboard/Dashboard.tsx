@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import ProjectCard from "../components/ProjectCard";
-import { Project } from "../types/Project";
-import AddProjectCard from "../components/AddProjectCard";
-import { supabase } from "../database/subabaseClient";
+import React, { useCallback, useEffect, useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import ProjectCard from "../../components/ProjectCard";
+import { Project } from "../../types/Project";
+import AddProjectCard from "../../components/AddProjectCard";
+import { supabase } from "../../database/subabaseClient";
 import { Box, CircularProgress } from "@mui/material";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
@@ -13,14 +13,14 @@ export default function Dashboard() {
   const [loaded, setLoaded] = useState(false);
   const [earliestDate, setEarliestDate] = useState<Date>(new Date());
 
-  const fetchNewData = async () => {
+  const fetchNewData = useCallback(async () => {
     setLoaded(false);
     const { data, error } = await supabase
       .from("projects")
       .select("id, name, description, created_at, image")
       .eq("user_id", user?.id)
       .filter("created_at", "lt", earliestDate?.toISOString())
-      .limit(25)
+      .limit(1)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -32,14 +32,10 @@ export default function Dashboard() {
 
     setData((prev) => [...prev, ...projectData]);
 
-    if (projectData.length > 0) {
-      setEarliestDate(new Date(projectData[projectData.length - 1].created_at));
-    }
-
     setLoaded(true);
-  };
+  }, [user?.id, earliestDate]);
 
-  const reloadAllData = async () => {
+  const reloadAllData = useCallback(async () => {
     setLoaded(false);
     const { data, error } = await supabase
       .from("projects")
@@ -57,11 +53,11 @@ export default function Dashboard() {
 
     setData(projectData);
     setLoaded(true);
-  };
+  }, [user?.id, earliestDate]);
 
   useEffect(() => {
     fetchNewData();
-  }, []);
+  }, [fetchNewData]);
 
   return (
     <div className="flex flex-col flex-1">
@@ -101,7 +97,9 @@ export default function Dashboard() {
         {loaded && data.length > 0 && (
           <div
             className="flex flex-row justify-center items-center w-full h-full cursor-pointer mt-8"
-            onClick={fetchNewData}
+            onClick={() => {
+              setEarliestDate(new Date(data[data.length - 1].created_at));
+            }}
           >
             <h3 className="text-lg text-white font-semibold flex flex-col items-center hover:scale-110">
               <CloudDownloadIcon />

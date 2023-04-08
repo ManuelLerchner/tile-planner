@@ -10,8 +10,8 @@ export function showGrid(p5: P5CanvasInstance) {
   p5.strokeWeight(2);
   p5.stroke(0);
 
-  const GridCorner = new Vector(-800, -800).add(tileOffset);
-  const GridSize = new Vector(1600, 1600);
+  const GridCorner = new Vector(-900, -900).add(tileOffset);
+  const GridSize = new Vector(1800, 1800);
 
   p5.rectMode(p5.CORNER);
 
