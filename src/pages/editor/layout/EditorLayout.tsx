@@ -3,9 +3,10 @@ import TopBar from "./TopBar";
 import BottomBar from "./BottomBar";
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { Mode } from "../../../types/Modes";
+import { InteractMode } from "../../../types/InteractMode";
 import { PolygonMesh } from "../../../types/Drawing";
 import { Vector } from "p5";
+import { TileMode } from "../../../types/TileMode";
 
 export default function EditorLayout({
   mode,
@@ -14,18 +15,22 @@ export default function EditorLayout({
   setDrawLength,
   tileDims,
   setTileDims,
+  tileMode,
+  setTileMode,
   setShowEdit,
   save,
   mainContentRef,
   children,
 }: {
-  mode: Mode;
-  setMode: React.Dispatch<React.SetStateAction<Mode>>;
+  mode: InteractMode;
+  setMode: React.Dispatch<React.SetStateAction<InteractMode>>;
   drawLength: number;
   setDrawLength: React.Dispatch<React.SetStateAction<number>>;
   tileDims: [number, number];
   setTileDims: React.Dispatch<React.SetStateAction<[number, number]>>;
   setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  tileMode: TileMode;
+  setTileMode: React.Dispatch<React.SetStateAction<TileMode>>;
   save: () => Promise<void>;
   mainContentRef: React.MutableRefObject<HTMLDivElement | null>;
   children: React.ReactNode;
@@ -45,6 +50,8 @@ export default function EditorLayout({
           setDrawLength={setDrawLength}
           tileDims={tileDims}
           setTileDims={setTileDims}
+          tileMode={tileMode}
+          setTileMode={setTileMode}
         />
       </div>
     </div>

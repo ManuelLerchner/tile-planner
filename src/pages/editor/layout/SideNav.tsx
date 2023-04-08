@@ -1,13 +1,13 @@
 import React from "react";
-import { Mode, Modes } from "../../../types/Modes";
+import { InteractMode, Modes } from "../../../types/InteractMode";
 import { useNavigate } from "react-router-dom";
 
 export default function SideNav({
   setMode,
   currentMode,
 }: {
-  setMode: React.Dispatch<React.SetStateAction<Mode>>;
-  currentMode: Mode;
+  setMode: React.Dispatch<React.SetStateAction<InteractMode>>;
+  currentMode: InteractMode;
 }) {
   const navigate = useNavigate();
   return (

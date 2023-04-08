@@ -1,7 +1,7 @@
 import { ReactP5Wrapper } from "react-p5-wrapper";
 import { TilePlanner } from "./TilePlanner/TilePlanner";
 import { createContext, forwardRef, useEffect, useRef, useState } from "react";
-import { Modes, Mode } from "../../types/Modes";
+import { Modes, InteractMode } from "../../types/InteractMode";
 import { PolygonMesh } from "../../types/Drawing";
 import { Vector } from "p5";
 import EditorLayout from "./layout/EditorLayout";
@@ -10,6 +10,7 @@ import { supabase } from "../../database/subabaseClient";
 import { Box, CircularProgress } from "@mui/material";
 import EditProjectModal from "../../components/EditProjectModal";
 import * as htmlToImage from "html-to-image";
+import { TileMode } from "../../types/TileMode";
 
 type RowEntry = {
   id: string;
@@ -18,6 +19,7 @@ type RowEntry = {
   tile_dims_y: number;
   tile_offset_x: number;
   tile_offset_y: number;
+  tile_mode: TileMode;
   projects: {
     name: string;
     description: string;
@@ -30,7 +32,7 @@ export function Editor() {
   const [loaded, setLoaded] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [drawLength, setDrawLength] = useState(100);
-  const [mode, setMode] = useState<Mode>(Modes[1]);
+  const [mode, setMode] = useState<InteractMode>(Modes[1]);
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   const [tileDims, setTileDims] = useState<[number, number]>([25, 25]);
@@ -41,6 +43,7 @@ export function Editor() {
   const [tileOffset, setTileOffset] = useState(new Vector(0, 0));
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [tileMode, setTileMode] = useState<TileMode>("Interlaced");
 
   const fetchData = async () => {
     setLoaded(false);
@@ -58,6 +61,7 @@ export function Editor() {
       setTileOffset(new Vector(row.tile_offset_x, row.tile_offset_y));
       setName(row.projects.name);
       setDescription(row.projects.description);
+      setTileMode(row.tile_mode);
     }
   };
 
@@ -86,8 +90,6 @@ export function Editor() {
         image: dataUrl,
       })
       .eq("id", id);
-      
-      console.log("saved");
   };
 
   // disable right click
@@ -129,6 +131,7 @@ export function Editor() {
             mode={mode["name"]}
             mesh={mesh}
             tileOffset={tileOffset}
+            tileMode={tileMode}
           />
         </div>
       </div>
@@ -141,6 +144,8 @@ export function Editor() {
       setMode={setMode}
       tileDims={tileDims}
       setTileDims={setTileDims}
+      tileMode={tileMode}
+      setTileMode={setTileMode}
       drawLength={drawLength}
       setDrawLength={setDrawLength}
       mainContentRef={mainContentRef}

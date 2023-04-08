@@ -4,12 +4,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import OpenWithIcon from "@mui/icons-material/OpenWith";
 import PanToolIcon from "@mui/icons-material/PanTool";
 
-export type Mode = {
+export type InteractMode = {
   name: "Marker" | "Connect" | "Delete" | "Align" | "Hand";
   icon: React.ElementType;
 };
 
-export const Modes: Mode[] = [
+export const Modes: InteractMode[] = [
   {
     name: "Hand",
     icon: PanToolIcon,

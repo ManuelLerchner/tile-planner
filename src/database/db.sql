@@ -14,6 +14,7 @@ create table drawings (
     tile_dims_y float not null,
     tile_offset_x float not null,
     tile_offset_y float not null,
+    tile_mode text not null,
     mesh jsonb not null,
     FOREIGN KEY (id) REFERENCES projects (id) ON DELETE CASCADE
 )

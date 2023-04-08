@@ -20,13 +20,14 @@ import {
   Polygon,
 } from "./data/DBConverter";
 import { drawLine } from "./sketch/DrawLines";
-import { Mode } from "../../../types/Modes";
+import { InteractMode } from "../../../types/InteractMode";
 import { nearestPoint } from "./helper/nearestPoint";
 import { addNewPoint } from "./data/addPoint";
 import { deletePoint } from "./data/deletePoint";
 import { addEdge } from "./data/addEdge";
 import { nearestEdge } from "./helper/nearestEdge";
 import { deleteEdge } from "./data/deleteEdge";
+import { TileMode } from "../../../types/TileMode";
 
 export const InterfaceData = {
   mesh: {} as PolygonMesh,
@@ -35,11 +36,12 @@ export const InterfaceData = {
   newPoint: undefined as Vector | undefined,
   tileOffset: new Vector() as Vector,
   tileDims: new Vector() as Vector,
+  tileMode: "Normal" as TileMode,
 };
 
 export function TilePlanner(p5: P5CanvasInstance) {
   let drawLength: number = 100;
-  let mode: Mode["name"] = "Marker";
+  let mode: InteractMode["name"] = "Marker";
 
   p5.updateWithProps = (props) => {
     const dims = props.tileDims as number[];
@@ -47,12 +49,12 @@ export function TilePlanner(p5: P5CanvasInstance) {
       InterfaceData.tileDims = new Vector(dims[0], dims[1]);
     }
     drawLength = props.drawLength as number;
-    mode = props.mode as Mode["name"];
+    mode = props.mode as InteractMode["name"];
     InterfaceData.newPoint = undefined;
     InterfaceData.selectedPoint = undefined;
     InterfaceData.mesh = props.mesh as PolygonMesh;
     InterfaceData.tileOffset = props.tileOffset as Vector;
-
+    InterfaceData.tileMode = props.tileMode as TileMode;
     InterfaceData.drawData = DrawingToVectors(InterfaceData.mesh);
   };
 
