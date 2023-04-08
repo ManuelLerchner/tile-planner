@@ -34,17 +34,17 @@ export const InterfaceData = {
   selectedPoint: undefined as Vector | undefined,
   newPoint: undefined as Vector | undefined,
   tileOffset: new Vector() as Vector,
+  tileDims: new Vector() as Vector,
 };
 
 export function TilePlanner(p5: P5CanvasInstance) {
-  let tileDims: Vector = new Vector(30, 30);
   let drawLength: number = 100;
   let mode: Mode["name"] = "Marker";
 
   p5.updateWithProps = (props) => {
     const dims = props.tileDims as number[];
     if (dims[0] > 0 && dims[1] > 0) {
-      tileDims = new Vector(dims[0], dims[1]);
+      InterfaceData.tileDims = new Vector(dims[0], dims[1]);
     }
     drawLength = props.drawLength as number;
     mode = props.mode as Mode["name"];
@@ -71,7 +71,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
     p5.background(51);
     p5.translate(width / 2, height / 2);
 
-    showGrid(p5, tileDims);
+    showGrid(p5);
     drawPolygons(p5);
 
     if (mode === "Marker" || mode === "Connect") {

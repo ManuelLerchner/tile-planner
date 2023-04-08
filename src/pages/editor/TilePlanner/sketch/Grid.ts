@@ -3,8 +3,8 @@ import { P5CanvasInstance } from "react-p5-wrapper";
 import { toScreenPos } from "../Window/UnitConverter";
 import { InterfaceData } from "../TilePlanner";
 
-export function showGrid(p5: P5CanvasInstance, tileDims: Vector) {
-  const { tileOffset } = InterfaceData;
+export function showGrid(p5: P5CanvasInstance) {
+  const { tileOffset, tileDims } = InterfaceData;
 
   p5.push();
   p5.strokeWeight(1);

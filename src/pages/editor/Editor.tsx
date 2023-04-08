@@ -8,6 +8,8 @@ import EditorLayout from "./layout/EditorLayout";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../database/subabaseClient";
 import { Box, CircularProgress } from "@mui/material";
+import EditProjectModal from "../../components/EditProjectModal";
+import * as htmlToImage from "html-to-image";
 
 type RowEntry = {
   id: string;
@@ -18,6 +20,7 @@ type RowEntry = {
   tile_offset_y: number;
   projects: {
     name: string;
+    description: string;
   };
 };
 
@@ -25,6 +28,7 @@ export function Editor() {
   const id = useParams().id as string;
 
   const [loaded, setLoaded] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [drawLength, setDrawLength] = useState(100);
   const [mode, setMode] = useState<Mode>(Modes[1]);
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -36,12 +40,13 @@ export function Editor() {
   });
   const [tileOffset, setTileOffset] = useState(new Vector(0, 0));
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   const fetchData = async () => {
     setLoaded(false);
     const { data } = await supabase
       .from("drawings")
-      .select("*, projects(name)")
+      .select("*, projects(name, description)")
       .eq("id", id)
       .single();
     const row = data as RowEntry;
@@ -52,12 +57,38 @@ export function Editor() {
       setTileDims([row.tile_dims_x, row.tile_dims_y]);
       setTileOffset(new Vector(row.tile_offset_x, row.tile_offset_y));
       setName(row.projects.name);
+      setDescription(row.projects.description);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const save = async () => {
+    var node = mainContentRef.current;
+    if (!node) return;
+    if (!loaded) return;
+
+    const dataUrl = await htmlToImage.toJpeg(node, {
+      quality: 0.95,
+    });
+
+    await supabase.from("drawings").upsert({
+      id: id,
+      mesh: mesh,
+      tile_dims_x: tileDims[0],
+      tile_dims_y: tileDims[1],
+      tile_offset_x: tileOffset.x,
+      tile_offset_y: tileOffset.y,
+      updated_at: new Date().toISOString(),
+    });
+
+    await supabase
+      .from("projects")
+      .update({
+        image: dataUrl,
+      })
+      .eq("id", id);
+      
+      console.log("saved");
+  };
 
   // disable right click
   useEffect(() => {
@@ -72,18 +103,23 @@ export function Editor() {
     };
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      save();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const ComponentToPrint = forwardRef<HTMLDivElement>((props, ref) => {
     return (
-      <div ref={ref}>
+      <div ref={ref} className="h-full">
         <div className="hidden print:block p-4">
-          <h1 className="text-2xl ">{name}</h1>
-          <h2 className="text-xl">
-            {new Date().toLocaleDateString("gb-GB", {
-              weekday: "long",
-              year: "numeric",
-              month: "numeric",
-            })}
-          </h2>
+          <h1 className="text-4xl mb-4">{name}</h1>
+          <p className="text-2xl">{description}</p>
         </div>
         <div className="print:contrast-200 print:invert ">
           <ReactP5Wrapper
@@ -103,16 +139,25 @@ export function Editor() {
     <EditorLayout
       mode={mode}
       setMode={setMode}
-      id={id}
       tileDims={tileDims}
       setTileDims={setTileDims}
       drawLength={drawLength}
       setDrawLength={setDrawLength}
-      tileOffset={tileOffset}
       mainContentRef={mainContentRef}
-      mesh={mesh}
-      loaded={loaded}
+      setShowEdit={setShowEdit}
+      save={save}
     >
+      {showEdit && (
+        <EditProjectModal
+          projectId={id}
+          setShowEdit={setShowEdit}
+          onEdit={async () => {
+            await save();
+            fetchData();
+          }}
+        />
+      )}
+
       {!loaded && (
         <Box
           sx={{

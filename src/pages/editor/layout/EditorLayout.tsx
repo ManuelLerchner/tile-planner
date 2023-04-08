@@ -14,12 +14,10 @@ export default function EditorLayout({
   setDrawLength,
   tileDims,
   setTileDims,
-  id,
-  tileOffset,
+  setShowEdit,
+  save,
   mainContentRef,
-  mesh,
   children,
-  loaded,
 }: {
   mode: Mode;
   setMode: React.Dispatch<React.SetStateAction<Mode>>;
@@ -27,26 +25,21 @@ export default function EditorLayout({
   setDrawLength: React.Dispatch<React.SetStateAction<number>>;
   tileDims: [number, number];
   setTileDims: React.Dispatch<React.SetStateAction<[number, number]>>;
-  id: string;
-  tileOffset: Vector;
+  setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  save: () => Promise<void>;
   mainContentRef: React.MutableRefObject<HTMLDivElement | null>;
-  mesh: PolygonMesh;
   children: React.ReactNode;
-  loaded: boolean;
 }) {
   return (
     <div className="flex h-screen ">
       <SideNav currentMode={mode} setMode={setMode} />
       <div className="flex flex-col flex-1 w-full">
         <TopBar
-          id={id}
           mainContentRef={mainContentRef}
-          mesh={mesh}
-          tileDims={tileDims}
-          tileOffset={tileOffset}
-          loaded={loaded}
+          save={save}
+          setShowEdit={setShowEdit}
         />
-        <main className="bg-gray-300 w-full h-full">{children}</main>
+        <main className="bg-gray-800 w-full h-full">{children}</main>
         <BottomBar
           drawLength={drawLength}
           setDrawLength={setDrawLength}

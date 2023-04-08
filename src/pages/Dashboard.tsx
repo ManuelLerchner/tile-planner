@@ -16,7 +16,8 @@ export default function Dashboard() {
     const { data, error } = await supabase
       .from("projects")
       .select("id, name, description, created_at, image")
-      .eq("user_id", user?.id);
+      .eq("user_id", user?.id)
+      .order("created_at", { ascending: false });
 
     if (error) {
       alert(error.message);
@@ -51,7 +52,11 @@ export default function Dashboard() {
           </div>
         )) ||
           data.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onEdit={fetchData}
+            />
           ))}
       </div>
     </div>

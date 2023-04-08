@@ -7,6 +7,7 @@ import { Vector } from "p5";
 export function drawPolygons(p5: P5CanvasInstance) {
   const { edges, polygons } = InterfaceData.drawData;
   const { scale } = WindowData;
+  const { tileDims } = InterfaceData;
 
   p5.textAlign(p5.CENTER, p5.CENTER);
 
@@ -40,8 +41,14 @@ export function drawPolygons(p5: P5CanvasInstance) {
       p5.stroke(0);
       p5.fill(165, 180, 255);
 
-      p5.textSize(20 + polygon.area * scale);
-      p5.text(p5.nf(polygon.area, 0, 1) + "m²", centerOfMass.x, centerOfMass.y);
+      const pieces = (polygon.area * 10000) / (tileDims.x * tileDims.y);
+
+      p5.textSize(18 + polygon.area * scale);
+      p5.text(
+        p5.nf(polygon.area, 0, 1) + "m² / " + p5.nf(pieces, 0, 1) + " Stk. ",
+        centerOfMass.x,
+        centerOfMass.y
+      );
     }
   }
 
@@ -61,11 +68,20 @@ export function drawPolygons(p5: P5CanvasInstance) {
 
   for (let edge of edges) {
     const { start, end } = edge;
-
+    const center = start.copy().add(end).div(2);
     const len = start.dist(end);
-    const centerScreenPos = toScreenPos(start.copy().add(end).div(2));
 
-    p5.textSize(15 + len * scale);
-    p5.text(p5.nf(len, 0, 1), centerScreenPos.x, centerScreenPos.y + 15);
+    const centerScreenPos = toScreenPos(center);
+
+    const offset = end
+      .copy()
+      .sub(start)
+      .rotate(-p5.HALF_PI)
+      .setMag(20 + 20 * scale);
+
+    centerScreenPos.add(offset);
+
+    p5.textSize(14 + (len * scale) / 2);
+    p5.text(p5.nf(len, 0, 1), centerScreenPos.x, centerScreenPos.y);
   }
 }
