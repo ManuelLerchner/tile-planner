@@ -20,8 +20,8 @@ export default function Dashboard() {
       .select("id, name, description, created_at, image")
       .eq("user_id", user?.id)
       .filter("created_at", "lt", earliestDate?.toISOString())
-      .limit(1)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(25);
 
     if (error) {
       alert(error.message);
@@ -37,23 +37,24 @@ export default function Dashboard() {
 
   const reloadAllData = useCallback(async () => {
     setLoaded(false);
-    const { data, error } = await supabase
+
+    const { data: newData, error } = await supabase
       .from("projects")
       .select("id, name, description, created_at, image")
       .eq("user_id", user?.id)
-      .filter("created_at", "gt", earliestDate?.toISOString())
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(data.length);
 
     if (error) {
       alert(error.message);
       return;
     }
 
-    const projectData = data as Project[];
+    const projectData = newData as Project[];
 
     setData(projectData);
     setLoaded(true);
-  }, [user?.id, earliestDate]);
+  }, [user?.id, data.length]);
 
   useEffect(() => {
     fetchNewData();

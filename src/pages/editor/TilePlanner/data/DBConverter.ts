@@ -1,6 +1,6 @@
 import { Vector } from "p5";
 import { PolygonMesh } from "../../../../types/Drawing";
-import { calculateConnectedComponents } from "../math/ConnedtedComponents";
+import { calculateConnectedComponents } from "../math/graph";
 import { getAreaOfPolygon } from "../math/area";
 
 export type Polygon = {
@@ -28,6 +28,8 @@ export function DrawingToVectors(mesh: PolygonMesh): FundamentData {
         const vertex = mesh.vertices.find((vertex) => vertex.id === id);
         if (vertex) {
           return new Vector(vertex.x, vertex.y, id);
+        } else {
+          return undefined;
         }
       })
       .filter((vector) => vector !== undefined) as Vector[];

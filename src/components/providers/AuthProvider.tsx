@@ -3,13 +3,13 @@ import React, { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../database/subabaseClient";
 
-interface AuthContext {
+interface IAuthContext {
   user: User | null;
   login: () => Promise<[boolean, JSX.Element]>;
   logout: () => void;
 }
 
-const defaultAuthContext: AuthContext = {
+const defaultAuthContext: IAuthContext = {
   user: null,
   login: async () => {
     console.log("Login function not initialized yet");
@@ -102,6 +102,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       navigate(returnTo);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

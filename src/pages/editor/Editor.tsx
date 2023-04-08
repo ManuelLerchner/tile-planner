@@ -47,12 +47,15 @@ export function Editor() {
 
   const fetchData = useCallback(async () => {
     setLoaded(false);
-    const { data } = await supabase
+    console.log(id);
+    const { data, error } = await supabase
       .from("drawings")
       .select("*, projects(name, description)")
       .eq("id", id)
       .single();
     const row = data as RowEntry;
+
+    console.log(error);
 
     setLoaded(true);
     if (row) {
@@ -71,7 +74,7 @@ export function Editor() {
     if (!loaded) return;
 
     const dataUrl = await htmlToImage.toJpeg(node, {
-      quality: 0.95,
+      quality: 0.4,
     });
 
     await supabase.from("drawings").upsert({
@@ -93,23 +96,9 @@ export function Editor() {
       .eq("id", id);
   }, [loaded, tileDims, tileOffset, tileMode, id, mesh]);
 
-  // disable right click
-  useEffect(() => {
-    const handleContextmenu = (e: any) => {
-      e.preventDefault();
-    };
-    document
-      .getElementById("sketch-window")
-      ?.addEventListener("contextmenu", handleContextmenu);
-    return function cleanup() {
-      document.removeEventListener("contextmenu", handleContextmenu);
-    };
-  }, []);
-
   useEffect(() => {
     const interval = setInterval(() => {
       save();
-      console.log("saved");
     }, 20000);
     return () => clearInterval(interval);
   }, [save]);
@@ -119,8 +108,20 @@ export function Editor() {
   }, [fetchData]);
 
   const ComponentToPrint = forwardRef<HTMLDivElement>((props, ref) => {
+    // disable right click
+    useEffect(() => {
+      const handleContextmenu = (e: any) => {
+        e.preventDefault();
+      };
+      document
+        .getElementById("sketch-window")
+        ?.addEventListener("contextmenu", handleContextmenu);
+      return function cleanup() {
+        document.removeEventListener("contextmenu", handleContextmenu);
+      };
+    }, []);
     return (
-      <div ref={ref} className="h-full">
+      <div id="sketch-window" ref={ref} className="h-full">
         <div className="hidden print:flex p-4 flex-col items-center justify-center">
           <h1 className="text-4xl mb-4">
             {name +
@@ -187,7 +188,7 @@ export function Editor() {
       )}
 
       {loaded && (
-        <div id="sketch-window" className="w-full h-full">
+        <div className="w-full h-full">
           <ComponentToPrint ref={mainContentRef} />
         </div>
       )}

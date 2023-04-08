@@ -97,7 +97,7 @@ export default function EditProjectModal({
             <label htmlFor="projectDescription">Project Description</label>
             <textarea
               id="projectDescription"
-              className="input p-2 h-10 bg-gray-400 placeholder:text-gray-500"
+              className="input p-2 h-36 bg-gray-400 placeholder:text-gray-500"
               placeholder="Project Description"
               value={projectDescription}
               onChange={(e) => setProjectDescription(e.target.value)}

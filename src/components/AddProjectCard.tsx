@@ -68,7 +68,7 @@ export default function AddProjectCard() {
             <label htmlFor="projectDescription">Project Description</label>
             <textarea
               id="projectDescription"
-              className="input p-2 h-10 bg-gray-400 placeholder:text-gray-500"
+              className="input p-2 h-24 bg-gray-400 placeholder:text-gray-500"
               placeholder="Project Description"
               value={projectDescription}
               onChange={(e) => setProjectDescription(e.target.value)}

@@ -5,21 +5,26 @@ function floodFill(
   edges: PolygonMesh["edges"],
   visited: { [id: number]: boolean }
 ) {
-  if (visited[vertex_id]) {
-    return [];
-  }
   visited[vertex_id] = true;
 
   const adjacent_edges = edges.filter(
     (edge) => edge.startID === vertex_id || edge.endID === vertex_id
   );
 
+  // initialize a component
   const members = [vertex_id];
 
+  // go through all adjacent edges and traverse them
   for (let edge of adjacent_edges) {
     const next_vertex_id =
       edge.startID === vertex_id ? edge.endID : edge.startID;
 
+    //dont add the same vertex twice
+    if (visited[next_vertex_id]) {
+      continue;
+    }
+
+    // traverse all edges and combine them
     const new_memvers = floodFill(next_vertex_id, edges, visited);
     members.push(...new_memvers);
   }
@@ -27,34 +32,40 @@ function floodFill(
   return members;
 }
 
-function traverseUntilEdge(
+function findEdgeOfGraph(
   vertex_id: number,
   edges: PolygonMesh["edges"],
   visited: { [id: number]: boolean }
 ): number {
-  if (visited[vertex_id]) {
-    return vertex_id;
-  }
   visited[vertex_id] = true;
 
   const adjacent_edges = edges.filter(
     (edge) => edge.startID === vertex_id || edge.endID === vertex_id
   );
 
+  // found an edge
   if (adjacent_edges.length === 1) {
     return vertex_id;
   }
 
+  // go through all adjacent edges and traverse them
   for (let edge of adjacent_edges) {
     const next_vertex_id =
       edge.startID === vertex_id ? edge.endID : edge.startID;
 
-    const edge_id = traverseUntilEdge(next_vertex_id, edges, visited);
+    // dont go back
+    if (visited[next_vertex_id]) {
+      continue;
+    }
+
+    // recursively traverse
+    const edge_id = findEdgeOfGraph(next_vertex_id, edges, visited);
     if (edge_id) {
       return edge_id;
     }
   }
 
+  // loop detected, so just start somewhere
   return vertex_id;
 }
 
@@ -67,7 +78,7 @@ export function calculateConnectedComponents(drawing: PolygonMesh) {
     if (visited[vertex.id]) {
       continue;
     }
-    const edge_id = traverseUntilEdge(vertex.id, drawing.edges, {});
+    const edge_id = findEdgeOfGraph(vertex.id, drawing.edges, {});
     const connected_components = floodFill(edge_id, drawing.edges, visited);
     connectedComponents[group_number] = connected_components;
     group_number++;
