@@ -14,10 +14,7 @@ import { showGrid } from "./sketch/Grid";
 import { PolygonMesh } from "../../../types/Drawing";
 import { InteractMode } from "../../../types/InteractMode";
 import { TileMode } from "../../../types/TileMode";
-import {
-  DrawingToVectors,
-  FundamentData
-} from "./data/DBConverter";
+import { DrawingToVectors, FundamentData } from "./data/DBConverter";
 import { addEdge } from "./data/addEdge";
 import { addNewPoint } from "./data/addPoint";
 import { deleteEdge } from "./data/deleteEdge";

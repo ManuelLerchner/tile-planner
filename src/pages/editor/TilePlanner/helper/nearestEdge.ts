@@ -1,11 +1,7 @@
-import { P5CanvasInstance } from "react-p5-wrapper";
-import { PolygonMesh, Vertex } from "../../../../types/Drawing";
-import { toScreenPos } from "../Window/UnitConverter";
-import { WindowData } from "../Window/Window";
-import { MouseData } from "../Window/Mouse";
 import { Vector } from "p5";
 import { InterfaceData } from "../TilePlanner";
-import { Edge, Polygon } from "../data/DBConverter";
+import { toScreenPos } from "../Window/UnitConverter";
+import { Edge } from "../data/DBConverter";
 
 export function nearestEdge(screenPos: Vector) {
   const { edges } = InterfaceData.drawData;

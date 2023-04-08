@@ -32,7 +32,6 @@ export function mouseWheel(e: WheelEvent) {
   WindowData.scale *= 1 - signum * 0.1;
 }
 
-
 export function mousePressed(e: MouseEvent) {
   const { outside } = MouseData;
 

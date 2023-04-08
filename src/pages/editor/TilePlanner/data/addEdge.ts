@@ -1,5 +1,4 @@
 import { Vector } from "p5";
-import { PolygonMesh, getFreeID } from "../../../../types/Drawing";
 import { InterfaceData } from "../TilePlanner";
 import { DrawingToVectors } from "./DBConverter";
 

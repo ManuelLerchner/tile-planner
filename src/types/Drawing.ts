@@ -1,5 +1,3 @@
-import { Vector } from "p5";
-
 export interface Vertex {
   id: number;
   x: number;

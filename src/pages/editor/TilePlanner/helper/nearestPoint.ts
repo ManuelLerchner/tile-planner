@@ -1,11 +1,6 @@
-import { P5CanvasInstance } from "react-p5-wrapper";
-import { PolygonMesh } from "../../../../types/Drawing";
-import { toScreenPos } from "../Window/UnitConverter";
-import { WindowData } from "../Window/Window";
-import { MouseData } from "../Window/Mouse";
 import { Vector } from "p5";
 import { InterfaceData } from "../TilePlanner";
-import { Polygon } from "../data/DBConverter";
+import { toScreenPos } from "../Window/UnitConverter";
 
 export function nearestPoint(screenPos: Vector) {
   const { polygons } = InterfaceData.drawData;

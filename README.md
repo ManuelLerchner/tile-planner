@@ -6,13 +6,13 @@ Hosted at: [https://tile-planner.manuellerchner.de/](https://tile-planner.manuel
 
 ## Features
 
-+ Draw the floor plan
-+ Select different tiling patterns
-+ Move the tiles around to find the best layout
-+ Automatically calculate the amount of tiles needed
-+ Save your plans in a database
-+ Edit your plans
-+ Create a printable PDF of your plan
+- Draw the floor plan
+- Select different tiling patterns
+- Move the tiles around to find the best layout
+- Automatically calculate the amount of tiles needed
+- Save your plans in a database
+- Edit your plans
+- Create a printable PDF of your plan
 
 ## Demo Images
 
