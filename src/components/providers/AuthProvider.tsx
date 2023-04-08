@@ -1,7 +1,7 @@
 import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { supabase } from "../database/subabaseClient";
+import { supabase } from "../../database/subabaseClient";
 
 interface AuthContext {
   user: User | null;
@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = useMemo(
     () => () => {
       supabase.auth.signOut();
+      setUser(null);
     },
     []
   );

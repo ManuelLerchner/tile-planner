@@ -1,10 +1,11 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Editor } from "./components/pages/Editor";
-import Dashboard from "./components/pages/Dashboard";
-import Login from "./components/layout/auth/Login";
+import { Editor } from "./pages/editor/Editor";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import { AuthContext, AuthProvider } from "./components/providers/AuthProvider";
-import EditorLayout from "./components/editor/layout/EditorLayout";
-import ProtectedRoute from "./components/layout/auth/ProtectedRoute";
+import EditorLayout from "./pages/editor/layout/EditorLayout";
+import DashboardLayout from "./components/layout/DashboardLayout";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 export function App() {
   return (
@@ -14,19 +15,16 @@ export function App() {
           <Route path={"/auth"}>
             <Route path={"login/"} element={<Login />} />
           </Route>
-          <Route path={"/"} element={<Navigate to={"/dashboard"} />} />
-          <Route path="/dashboard" element={<ProtectedRoute />}>
-            <Route index element={<Dashboard />} />
-          </Route>
-          <Route path={"/editor"} element={<ProtectedRoute />}>
-            <Route
-              path=":id"
-              element={
-                <EditorLayout>
-                  <Editor />
-                </EditorLayout>
-              }
-            />
+
+          <Route path={"/"} element={<ProtectedRoute />}>
+            <Route index element={<Navigate to={"/dashboard"} />} />
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<Dashboard />} />
+            </Route>
+
+            <Route path={"/editor"} >
+              <Route path=":id" element={<Editor />} />
+            </Route>
           </Route>
         </Routes>
       </AuthProvider>
