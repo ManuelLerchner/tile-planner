@@ -28,7 +28,7 @@ export default function BottomBar({
           name="length"
           id="length"
           value={drawLength}
-          onChange={(e) => setDrawLength(parseInt(e.target.value))}
+          onChange={(e) => setDrawLength(parseFloat(e.target.value))}
         />
         <span className="text-xl">cm</span>
       </div>
@@ -38,24 +38,24 @@ export default function BottomBar({
         </label>
         <input
           type="number"
-          className="w-20 bg-gray-800 text-white p-2 rounded-lg text-center"
+          className="w-24 bg-gray-800 text-white p-2 rounded-lg text-center"
           name="tile_width"
           id="tile_width"
           value={tileDims[0]}
           onChange={(e) => {
-            const newWidth = parseInt(e.target.value);
+            const newWidth = parseFloat(e.target.value);
             setTileDims((old) => [newWidth, old[1]]);
           }}
         />
         <span className="text-2xl">x</span>
         <input
           type="number"
-          className="w-20 bg-gray-800 text-white p-2 rounded-lg text-center"
+          className="w-24 bg-gray-800 text-white p-2 rounded-lg text-center"
           name="tile_width"
           id="tile_width"
           value={tileDims[1]}
           onChange={(e) => {
-            const newHeight = parseInt(e.target.value);
+            const newHeight = parseFloat(e.target.value);
             setTileDims((old) => [old[0], newHeight]);
           }}
         />

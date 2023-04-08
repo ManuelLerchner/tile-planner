@@ -15,7 +15,7 @@ export function drawPolygons(p5: P5CanvasInstance) {
     p5.stroke(0);
     p5.strokeWeight(0);
 
-    p5.fill(250, 200, 140, 100);
+    p5.fill(140, 200, 250, 100);
 
     p5.beginShape();
     const centerOfMass = new Vector(0, 0);

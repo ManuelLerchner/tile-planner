@@ -7,7 +7,7 @@ export function showGrid(p5: P5CanvasInstance) {
   const { tileOffset, tileDims, tileMode } = InterfaceData;
 
   p5.push();
-  p5.strokeWeight(1);
+  p5.strokeWeight(2);
   p5.stroke(0);
 
   const GridCorner = new Vector(-800, -800).add(tileOffset);

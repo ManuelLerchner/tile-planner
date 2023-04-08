@@ -13,7 +13,7 @@ export default function Dashboard() {
   const [loaded, setLoaded] = useState(false);
   const [earliestDate, setEarliestDate] = useState<Date>(new Date());
 
-  const fetchData = async () => {
+  const fetchNewData = async () => {
     setLoaded(false);
     const { data, error } = await supabase
       .from("projects")
@@ -39,8 +39,28 @@ export default function Dashboard() {
     setLoaded(true);
   };
 
+  const reloadAllData = async () => {
+    setLoaded(false);
+    const { data, error } = await supabase
+      .from("projects")
+      .select("id, name, description, created_at, image")
+      .eq("user_id", user?.id)
+      .filter("created_at", "gt", earliestDate?.toISOString())
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const projectData = data as Project[];
+
+    setData(projectData);
+    setLoaded(true);
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchNewData();
   }, []);
 
   return (
@@ -66,7 +86,7 @@ export default function Dashboard() {
             <ProjectCard
               key={project.id}
               project={project}
-              onEdit={fetchData}
+              onEdit={reloadAllData}
             />
           ))}
 
@@ -81,7 +101,7 @@ export default function Dashboard() {
         {loaded && data.length > 0 && (
           <div
             className="flex flex-row justify-center items-center w-full h-full cursor-pointer mt-8"
-            onClick={fetchData}
+            onClick={fetchNewData}
           >
             <h3 className="text-lg text-white font-semibold flex flex-col items-center hover:scale-110">
               <CloudDownloadIcon />

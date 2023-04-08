@@ -124,11 +124,19 @@ export function Editor() {
   const ComponentToPrint = forwardRef<HTMLDivElement>((props, ref) => {
     return (
       <div ref={ref} className="h-full">
-        <div className="hidden print:block p-4">
-          <h1 className="text-4xl mb-4">{name}</h1>
+        <div className="hidden print:flex p-4 flex-col items-center justify-center">
+          <h1 className="text-4xl mb-4">
+            {name +
+              " - " +
+              new Date().toLocaleDateString("gb-GB", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+          </h1>
           <p className="text-2xl">{description}</p>
         </div>
-        <div className="print:contrast-200 print:invert ">
+        <div className="print:contrast-200 print:invert print:mt-4">
           <ReactP5Wrapper
             sketch={TilePlanner}
             drawLength={drawLength}
