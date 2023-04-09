@@ -3,15 +3,20 @@ import { toScreenPos } from "../Window/UnitConverter";
 import { WindowData } from "../Window/Window";
 import { InterfaceData } from "../TilePlanner";
 import { Vector } from "p5";
+import { dist2d } from "../math/Vector";
+import { MouseData } from "../Window/Mouse";
 
 export function drawPolygons(p5: P5CanvasInstance) {
   const { edges, polygons } = InterfaceData.drawData;
   const { scale } = WindowData;
-  const { tileDims } = InterfaceData;
+  const { tileDims, tool } = InterfaceData;
+  const { mouseScreenPos } = MouseData;
 
   p5.textAlign(p5.CENTER, p5.CENTER);
 
   p5.stroke(0);
+  let closestToMouse: Vector | undefined = undefined;
+  let closestDist = Infinity;
   for (let polygon of polygons) {
     //area
     p5.strokeWeight(0);
@@ -27,10 +32,23 @@ export function drawPolygons(p5: P5CanvasInstance) {
     // Markers
     p5.fill(255);
     p5.strokeWeight(1);
+
     for (let point of polygon.vectors) {
       const pos = toScreenPos(point);
+      const distToMouse = dist2d(pos, mouseScreenPos);
+      if (distToMouse < closestDist && distToMouse < 30) {
+        closestDist = distToMouse;
+        closestToMouse = point;
+      }
       p5.circle(pos.x, pos.y, 12);
     }
+  }
+
+  //highlight closest
+  if (closestToMouse && tool == "Connect") {
+    const pos = toScreenPos(closestToMouse);
+    p5.fill(255, 0, 0);
+    p5.circle(pos.x, pos.y, 12);
   }
 
   for (let edge of edges) {

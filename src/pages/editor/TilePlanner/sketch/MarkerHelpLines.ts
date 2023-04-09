@@ -5,36 +5,22 @@ import { toScreenPos } from "../Window/UnitConverter";
 import { Vector } from "p5";
 import { rayIntersectsLine } from "../math/lineIntersection";
 import { Edge } from "../data/DBConverter";
+import { center, dist2d } from "../math/Vector";
 
-function dist2d(a: Vector, b: Vector) {
-  return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-}
-
-function center(a: Vector, b: Vector) {
-  return a.copy().add(b).div(2);
-}
-
-export function drawLine(
-  p5: P5CanvasInstance,
-  drawLength: number,
-  showLimited: boolean
-) {
-  const { selectedPoint, markerMode } = InterfaceData;
-  if (!selectedPoint) return;
-
+export function drawMarkerHelpLines(p5: P5CanvasInstance) {
+  const { selectedPoint, markerMode, drawLength } = InterfaceData;
   const { mouseScreenPos, mouseGamePos } = MouseData;
 
+  if (!selectedPoint) return;
+
   const startPoint = toScreenPos(selectedPoint);
-
-  //draw line to mouse
-  p5.stroke(255, 0, 0);
-  p5.strokeWeight(1);
-  p5.line(startPoint.x, startPoint.y, mouseScreenPos.x, mouseScreenPos.y);
-
   const drawGameVector = mouseGamePos.copy().sub(selectedPoint);
+  drawGameVector.z = 0;
+
+  let rayAngle = drawGameVector.heading();
+
   if (markerMode === "Ortho") {
-    const angle = (drawGameVector.heading() + Math.PI * 2) % (Math.PI * 2);
-    const roundedAngle = Math.round(angle / (Math.PI / 2)) * (Math.PI / 2);
+    const roundedAngle = Math.round(rayAngle / (Math.PI / 4)) * (Math.PI / 4);
 
     const roundedVector = selectedPoint
       .copy()
@@ -44,15 +30,55 @@ export function drawLine(
 
     const endPoint = toScreenPos(roundedVector);
 
+    const limitedMouseScreenPos = toScreenPos(
+      drawGameVector.copy().setMag(drawLength).add(selectedPoint)
+    );
+
+    console.log(drawGameVector.mag());
+
+    //draw line to mouse
+    p5.stroke(255, 0, 0);
+    p5.strokeWeight(1);
+    p5.line(
+      startPoint.x,
+      startPoint.y,
+      limitedMouseScreenPos.x,
+      limitedMouseScreenPos.y
+    );
+
     //draw line to rounded point
-    if (showLimited) {
-      p5.stroke(0, 255, 0);
-      p5.strokeWeight(2);
-      p5.line(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
-      p5.ellipse(endPoint.x, endPoint.y, 5, 5);
-    }
+    p5.stroke(0, 255, 0);
+    p5.strokeWeight(2);
+    p5.line(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+    p5.ellipse(endPoint.x, endPoint.y, 5, 5);
   } else if (markerMode === "Free") {
     //check for intersection with other lines
+
+    const roundedAngle = Math.round(rayAngle / (Math.PI / 4)) * (Math.PI / 4);
+
+    let distMO = dist2d(mouseGamePos, selectedPoint);
+    let newPointVector = mouseGamePos;
+
+    const snappedVector = mouseGamePos
+      .copy()
+      .sub(selectedPoint)
+      .setMag(distMO)
+      .setHeading(roundedAngle)
+      .add(selectedPoint);
+
+    const distMouseSnapped = dist2d(toScreenPos(snappedVector), mouseScreenPos);
+
+    //snap to 45°
+    if (
+      Math.abs(rayAngle - roundedAngle) < Math.PI / 32 &&
+      distMouseSnapped < 10
+    ) {
+      newPointVector = snappedVector;
+      distMO = dist2d(newPointVector, selectedPoint);
+      rayAngle = roundedAngle;
+    }
+
+    const lockedScreenPos = toScreenPos(newPointVector);
 
     const { edges } = InterfaceData.drawData;
 
@@ -67,7 +93,7 @@ export function drawLine(
 
       const intersection = rayIntersectsLine(
         selectedPoint,
-        mouseGamePos.copy().sub(selectedPoint),
+        newPointVector.copy().sub(selectedPoint),
         start,
         end
       );
@@ -121,26 +147,29 @@ export function drawLine(
       p5.text(p5.round(distIS, 1), centerStartI.x, centerStartI.y + 10);
       p5.text(p5.round(distIE, 1), centerEndI.x, centerEndI.y + 10);
       p5.text(p5.round(distMI, 1), centerMouseI.x, centerMouseI.y + 10);
+    } else {
+      //draw line to mouse
+      p5.stroke(255, 0, 0);
+      p5.strokeWeight(1);
+      p5.line(startPoint.x, startPoint.y, lockedScreenPos.x, lockedScreenPos.y);
     }
-
-    const rayAngleDeg = (drawGameVector.heading() * 180) / Math.PI;
 
     //mouse ellipse
     p5.fill(255, 255, 0);
     p5.stroke(0);
     p5.strokeWeight(1);
-    p5.ellipse(mouseScreenPos.x, mouseScreenPos.y, 10, 10);
+    p5.ellipse(lockedScreenPos.x, lockedScreenPos.y, 10, 10);
 
-    InterfaceData.newPoint = mouseGamePos;
+    InterfaceData.newPoint = newPointVector;
 
-    const distMO = dist2d(mouseGamePos, selectedPoint);
-    const centerMouseO = center(mouseScreenPos, startPoint);
+    const centerMouseO = center(lockedScreenPos, startPoint);
 
     p5.fill(255, 0, 255);
     p5.stroke(0);
     p5.textSize(15);
     p5.text(p5.round(distMO, 1), centerMouseO.x, centerMouseO.y + 10);
 
+    let rayAngleDeg = (rayAngle * 180) / Math.PI;
     // angle
     p5.fill(0, 255, 255);
     p5.stroke(0);
@@ -148,8 +177,8 @@ export function drawLine(
     p5.textSize(15);
     p5.text(
       p5.round(rayAngleDeg, 1) + "°",
-      mouseScreenPos.x,
-      mouseScreenPos.y + 25
+      lockedScreenPos.x,
+      lockedScreenPos.y + 25
     );
   }
 }

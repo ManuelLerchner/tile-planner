@@ -5,6 +5,7 @@ import {
   mousePressed,
   mouseReleased,
   mouseWheel,
+  calculatePanMovement,
   updateMousePos,
 } from "./Window/Mouse";
 import { toGamePos, toScreenPos } from "./Window/UnitConverter";
@@ -21,32 +22,32 @@ import { deleteEdge } from "./data/deleteEdge";
 import { deletePoint } from "./data/deletePoint";
 import { nearestEdge } from "./helper/nearestEdge";
 import { nearestPoint } from "./helper/nearestPoint";
-import { drawLine } from "./sketch/DrawLines";
+import { drawMarkerHelpLines } from "./sketch/MarkerHelpLines";
 import { drawPolygons } from "./sketch/PolygonDrawer";
 import { MarkerMode } from "../../../types/MarkerMode";
+import { connectHelpLines } from "./sketch/ConnectHelpLines";
 
 export const InterfaceData = {
   mesh: {} as PolygonMesh,
   drawData: {} as FundamentData,
+  drawLength: 100 as number,
   selectedPoint: undefined as Vector | undefined,
   newPoint: undefined as Vector | undefined,
   tileOffset: new Vector() as Vector,
   tileDims: new Vector() as Vector,
   tileMode: "Normal" as TileMode,
   markerMode: "Exact" as MarkerMode,
+  tool: "Marker" as InteractTool["name"],
 };
 
 export function TilePlanner(p5: P5CanvasInstance) {
-  let drawLength: number = 100;
-  let tool: InteractTool["name"] = "Marker";
-
   p5.updateWithProps = (props) => {
     const dims = props.tileDims as number[];
     if (dims[0] > 0 && dims[1] > 0) {
       InterfaceData.tileDims = new Vector(dims[0], dims[1]);
     }
-    drawLength = props.drawLength as number;
-    tool = props.tool as InteractTool["name"];
+    InterfaceData.drawLength = props.drawLength as number;
+    InterfaceData.tool = props.tool as InteractTool["name"];
     InterfaceData.newPoint = undefined;
     InterfaceData.selectedPoint = undefined;
     InterfaceData.mesh = props.mesh as PolygonMesh;
@@ -74,8 +75,12 @@ export function TilePlanner(p5: P5CanvasInstance) {
     showGrid(p5);
     drawPolygons(p5);
 
-    if (tool === "Marker" || tool === "Connect") {
-      drawLine(p5, drawLength, tool === "Marker");
+    if (InterfaceData.tool === "Marker") {
+      drawMarkerHelpLines(p5);
+    }
+
+    if (InterfaceData.tool === "Connect") {
+      connectHelpLines(p5);
     }
 
     //show selectedPoint
@@ -102,7 +107,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
     InterfaceData.selectedPoint = nearestPoint(mouseScreenPos);
 
     if (MouseData.mouseButton === "LEFT") {
-      if (tool === "Marker") {
+      if (InterfaceData.tool === "Marker") {
         const { newPoint } = InterfaceData;
         if (newPoint) {
           addNewPoint(newPoint);
@@ -117,7 +122,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
         }
       }
 
-      if (tool === "Delete") {
+      if (InterfaceData.tool === "Delete") {
         const { selectedPoint } = InterfaceData;
         if (selectedPoint) {
           deletePoint(selectedPoint);
@@ -131,7 +136,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
         }
       }
 
-      if (tool === "Connect") {
+      if (InterfaceData.tool === "Connect") {
         const newPoint = InterfaceData.selectedPoint;
         if (newPoint && oldPoint) {
           addEdge(oldPoint, newPoint);
@@ -146,20 +151,30 @@ export function TilePlanner(p5: P5CanvasInstance) {
   p5.mouseDragged = (e: MouseEvent) => {
     const { scale } = WindowData;
     const { outside } = MouseData;
+    const { tool } = InterfaceData;
 
     if (outside) return;
 
-    const vec = new Vector(e.movementX, -e.movementY);
-    vec.div(scale);
+    const vec = new Vector(e.movementX, e.movementY);
+
+    const pan = calculatePanMovement(vec);
 
     if (tool === "Align") {
-      InterfaceData.tileOffset.add(vec.div(100));
+      InterfaceData.tileOffset = InterfaceData.tileOffset.add(pan.div(2));
       return;
     }
 
-    WindowData.transOffset.add(vec);
+    WindowData.transOffset = WindowData.transOffset.add(pan);
   };
+
   p5.mouseMoved = (e: MouseEvent) => {
     updateMousePos(p5, e);
+  };
+
+  p5.keyPressed = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      InterfaceData.selectedPoint = undefined;
+      InterfaceData.newPoint = undefined;
+    }
   };
 }
