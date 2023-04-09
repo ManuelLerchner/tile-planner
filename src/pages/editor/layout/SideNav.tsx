@@ -1,13 +1,13 @@
 import React from "react";
-import { InteractMode, Modes } from "../../../types/InteractMode";
+import { InteractTool, Tools } from "../../../types/InteractMode";
 import { useNavigate } from "react-router-dom";
 
 export default function SideNav({
-  setMode,
-  currentMode,
+  setInteractTool,
+  currentTool,
 }: {
-  setMode: React.Dispatch<React.SetStateAction<InteractMode>>;
-  currentMode: InteractMode;
+  setInteractTool: React.Dispatch<React.SetStateAction<InteractTool>>;
+  currentTool: InteractTool;
 }) {
   const navigate = useNavigate();
   return (
@@ -26,14 +26,14 @@ export default function SideNav({
 
         <div className="w-full py-12 flex items-center justify-center flex-col gap-4">
           <ul className="flex flex-col gap-4">
-            {Modes.map((mode) => (
+            {Tools.map((mode) => (
               <li
                 className={
                   "cursor-pointer hover:scale-[102%] my-2 " +
-                  (mode.name === currentMode.name ? "text-yellow-500" : "")
+                  (mode.name === currentTool.name ? "text-yellow-500" : "")
                 }
                 key={mode.name}
-                onClick={() => setMode(mode)}
+                onClick={() => setInteractTool(mode)}
               >
                 <div className="flex items- gap-4 justify-start font-bold text-xl">
                   <mode.icon />

@@ -81,7 +81,16 @@ export default function EditProjectModal({
           setShowEdit(false);
         }}
       />
-      <label htmlFor={modalID} className="modal cursor-pointer">
+      <label
+        htmlFor={modalID}
+        className="modal cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
         <label className="modal-box relative" htmlFor="">
           <h3 className="text-lg font-bold">Edit project</h3>
           <div className="flex flex-col gap-4 my-4">

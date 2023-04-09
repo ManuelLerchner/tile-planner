@@ -12,7 +12,7 @@ import { WindowData, getWindowSize } from "./Window/Window";
 import { showGrid } from "./sketch/Grid";
 
 import { PolygonMesh } from "../../../types/Drawing";
-import { InteractMode } from "../../../types/InteractMode";
+import { InteractTool } from "../../../types/InteractMode";
 import { TileMode } from "../../../types/TileMode";
 import { DrawingToVectors, FundamentData } from "./data/DBConverter";
 import { addEdge } from "./data/addEdge";
@@ -23,6 +23,7 @@ import { nearestEdge } from "./helper/nearestEdge";
 import { nearestPoint } from "./helper/nearestPoint";
 import { drawLine } from "./sketch/DrawLines";
 import { drawPolygons } from "./sketch/PolygonDrawer";
+import { MarkerMode } from "../../../types/MarkerMode";
 
 export const InterfaceData = {
   mesh: {} as PolygonMesh,
@@ -32,11 +33,12 @@ export const InterfaceData = {
   tileOffset: new Vector() as Vector,
   tileDims: new Vector() as Vector,
   tileMode: "Normal" as TileMode,
+  markerMode: "Exact" as MarkerMode,
 };
 
 export function TilePlanner(p5: P5CanvasInstance) {
   let drawLength: number = 100;
-  let mode: InteractMode["name"] = "Marker";
+  let tool: InteractTool["name"] = "Marker";
 
   p5.updateWithProps = (props) => {
     const dims = props.tileDims as number[];
@@ -44,13 +46,14 @@ export function TilePlanner(p5: P5CanvasInstance) {
       InterfaceData.tileDims = new Vector(dims[0], dims[1]);
     }
     drawLength = props.drawLength as number;
-    mode = props.mode as InteractMode["name"];
+    tool = props.tool as InteractTool["name"];
     InterfaceData.newPoint = undefined;
     InterfaceData.selectedPoint = undefined;
     InterfaceData.mesh = props.mesh as PolygonMesh;
     InterfaceData.tileOffset = props.tileOffset as Vector;
     InterfaceData.tileMode = props.tileMode as TileMode;
     InterfaceData.drawData = DrawingToVectors(InterfaceData.mesh);
+    InterfaceData.markerMode = props.markerMode as MarkerMode;
   };
 
   p5.setup = () => {
@@ -71,8 +74,8 @@ export function TilePlanner(p5: P5CanvasInstance) {
     showGrid(p5);
     drawPolygons(p5);
 
-    if (mode === "Marker" || mode === "Connect") {
-      drawLine(p5, drawLength, mode === "Marker");
+    if (tool === "Marker" || tool === "Connect") {
+      drawLine(p5, drawLength, tool === "Marker");
     }
 
     //show selectedPoint
@@ -99,7 +102,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
     InterfaceData.selectedPoint = nearestPoint(mouseScreenPos);
 
     if (MouseData.mouseButton === "LEFT") {
-      if (mode === "Marker") {
+      if (tool === "Marker") {
         const { newPoint } = InterfaceData;
         if (newPoint) {
           addNewPoint(newPoint);
@@ -114,7 +117,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
         }
       }
 
-      if (mode === "Delete") {
+      if (tool === "Delete") {
         const { selectedPoint } = InterfaceData;
         if (selectedPoint) {
           deletePoint(selectedPoint);
@@ -128,7 +131,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
         }
       }
 
-      if (mode === "Connect") {
+      if (tool === "Connect") {
         const newPoint = InterfaceData.selectedPoint;
         if (newPoint && oldPoint) {
           addEdge(oldPoint, newPoint);
@@ -149,7 +152,7 @@ export function TilePlanner(p5: P5CanvasInstance) {
     const vec = new Vector(e.movementX, -e.movementY);
     vec.div(scale);
 
-    if (mode === "Align") {
+    if (tool === "Align") {
       InterfaceData.tileOffset.add(vec.div(100));
       return;
     }

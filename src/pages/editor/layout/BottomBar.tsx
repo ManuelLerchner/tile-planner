@@ -1,5 +1,6 @@
 import React from "react";
 import { TileMode } from "../../../types/TileMode";
+import { MarkerMode } from "../../../types/MarkerMode";
 
 export default function BottomBar({
   drawLength,
@@ -8,6 +9,8 @@ export default function BottomBar({
   setTileDims,
   tileMode,
   setTileMode,
+  markerMode,
+  setMarkerMode,
 }: {
   drawLength: number;
   setDrawLength: React.Dispatch<React.SetStateAction<number>>;
@@ -15,25 +18,42 @@ export default function BottomBar({
   setTileDims: React.Dispatch<React.SetStateAction<[number, number]>>;
   tileMode: TileMode;
   setTileMode: React.Dispatch<React.SetStateAction<TileMode>>;
+  markerMode: MarkerMode;
+  setMarkerMode: React.Dispatch<React.SetStateAction<MarkerMode>>;
 }) {
   return (
     <div className="bg-gray-700 text-white text-2xl font-bold p-4 h-16 flex flex-row items-center justify-between px-8">
       <div className="flex flex-row gap-2 items-center">
-        <label htmlFor="length" className="mr-4 text-xl">
-          Marker Length:
+        <label htmlFor="marker_mode" className="mr-2 text-xl">
+          Marker Mode:
         </label>
-        <input
-          type="number"
-          className="w-32 bg-gray-800 text-white p-2 rounded-lg text-center"
-          name="length"
-          id="length"
-          value={drawLength}
-          onChange={(e) => setDrawLength(parseFloat(e.target.value))}
-        />
-        <span className="text-xl">cm</span>
+        <select
+          name="marker_mode"
+          id="marker_mode"
+          className="bg-gray-800 text-white p-2 rounded-lg text-center w-36"
+          value={markerMode}
+          onChange={(e) => setMarkerMode(e.target.value as MarkerMode)}
+        >
+          <option value="Free">Free</option>
+          <option value="Ortho">Ortho</option>
+        </select>
+
+        {markerMode === "Ortho" && (
+          <>
+            <input
+              type="number"
+              className="w-32 bg-gray-800 text-white p-2 rounded-lg text-center"
+              name="length"
+              id="length"
+              value={drawLength}
+              onChange={(e) => setDrawLength(parseFloat(e.target.value))}
+            />
+            <span className="text-xl">cm</span>
+          </>
+        )}
       </div>
       <div className="flex flex-row gap-2 items-center">
-        <label htmlFor="tile_width" className="mr-4 text-xl">
+        <label htmlFor="tile_width" className="mr-2 text-xl">
           Tile:
         </label>
         <input

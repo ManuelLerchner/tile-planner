@@ -7,10 +7,11 @@ import { useParams } from "react-router-dom";
 import EditProjectModal from "../../components/EditProjectModal";
 import { supabase } from "../../database/subabaseClient";
 import { PolygonMesh } from "../../types/Drawing";
-import { InteractMode, Modes } from "../../types/InteractMode";
+import { InteractTool, Tools } from "../../types/InteractMode";
 import { TileMode } from "../../types/TileMode";
 import { TilePlanner } from "./TilePlanner/TilePlanner";
 import EditorLayout from "./layout/EditorLayout";
+import { MarkerMode } from "../../types/MarkerMode";
 
 type RowEntry = {
   id: string;
@@ -32,7 +33,8 @@ export function Editor() {
   const [loaded, setLoaded] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [drawLength, setDrawLength] = useState(100);
-  const [mode, setMode] = useState<InteractMode>(Modes[1]);
+  const [interactTool, setInteractTool] = useState<InteractTool>(Tools[1]);
+  const [markerMode, setMarkerMode] = useState<MarkerMode>("Ortho");
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   const [tileDims, setTileDims] = useState<[number, number]>([25, 25]);
@@ -139,10 +141,11 @@ export function Editor() {
             sketch={TilePlanner}
             drawLength={drawLength}
             tileDims={tileDims}
-            mode={mode["name"]}
+            tool={interactTool.name}
             mesh={mesh}
             tileOffset={tileOffset}
             tileMode={tileMode}
+            markerMode={markerMode}
           />
         </div>
       </div>
@@ -151,8 +154,8 @@ export function Editor() {
 
   return (
     <EditorLayout
-      mode={mode}
-      setMode={setMode}
+      interactTool={interactTool}
+      setInteractTool={setInteractTool}
       tileDims={tileDims}
       setTileDims={setTileDims}
       tileMode={tileMode}
@@ -162,6 +165,8 @@ export function Editor() {
       mainContentRef={mainContentRef}
       setShowEdit={setShowEdit}
       save={save}
+      markerMode={markerMode}
+      setMarkerMode={setMarkerMode}
     >
       {showEdit && (
         <EditProjectModal

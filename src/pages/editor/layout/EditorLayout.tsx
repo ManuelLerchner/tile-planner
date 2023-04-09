@@ -1,13 +1,14 @@
 import React from "react";
-import { InteractMode } from "../../../types/InteractMode";
+import { InteractTool } from "../../../types/InteractMode";
 import { TileMode } from "../../../types/TileMode";
 import BottomBar from "./BottomBar";
 import SideNav from "./SideNav";
 import TopBar from "./TopBar";
+import { MarkerMode } from "../../../types/MarkerMode";
 
 export default function EditorLayout({
-  mode,
-  setMode,
+  interactTool,
+  setInteractTool,
   drawLength,
   setDrawLength,
   tileDims,
@@ -18,9 +19,11 @@ export default function EditorLayout({
   save,
   mainContentRef,
   children,
+  markerMode,
+  setMarkerMode,
 }: {
-  mode: InteractMode;
-  setMode: React.Dispatch<React.SetStateAction<InteractMode>>;
+  interactTool: InteractTool;
+  setInteractTool: React.Dispatch<React.SetStateAction<InteractTool>>;
   drawLength: number;
   setDrawLength: React.Dispatch<React.SetStateAction<number>>;
   tileDims: [number, number];
@@ -31,10 +34,12 @@ export default function EditorLayout({
   save: () => Promise<void>;
   mainContentRef: React.MutableRefObject<HTMLDivElement | null>;
   children: React.ReactNode;
+  markerMode: MarkerMode;
+  setMarkerMode: React.Dispatch<React.SetStateAction<MarkerMode>>;
 }) {
   return (
     <div className="flex h-screen ">
-      <SideNav currentMode={mode} setMode={setMode} />
+      <SideNav currentTool={interactTool} setInteractTool={setInteractTool} />
       <div className="flex flex-col flex-1 w-full">
         <TopBar
           mainContentRef={mainContentRef}
@@ -49,6 +54,8 @@ export default function EditorLayout({
           setTileDims={setTileDims}
           tileMode={tileMode}
           setTileMode={setTileMode}
+          markerMode={markerMode}
+          setMarkerMode={setMarkerMode}
         />
       </div>
     </div>
