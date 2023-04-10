@@ -34,8 +34,6 @@ export function drawMarkerHelpLines(p5: P5CanvasInstance) {
       drawGameVector.copy().setMag(drawLength).add(selectedPoint)
     );
 
-    console.log(drawGameVector.mag());
-
     //draw line to mouse
     p5.stroke(255, 0, 0);
     p5.strokeWeight(1);

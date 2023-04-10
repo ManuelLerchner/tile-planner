@@ -49,15 +49,12 @@ export function Editor() {
 
   const fetchData = useCallback(async () => {
     setLoaded(false);
-    console.log(id);
     const { data, error } = await supabase
       .from("drawings")
       .select("*, projects(name, description)")
       .eq("id", id)
       .single();
     const row = data as RowEntry;
-
-    console.log(error);
 
     setLoaded(true);
     if (row) {
@@ -108,6 +105,10 @@ export function Editor() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    setInteractTool(Tools[1]);
+  }, [markerMode]);
 
   const ComponentToPrint = forwardRef<HTMLDivElement>((props, ref) => {
     // disable right click

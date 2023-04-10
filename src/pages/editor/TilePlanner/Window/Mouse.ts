@@ -40,9 +40,6 @@ export function mouseWheel(e: WheelEvent) {
 
   const diff = newMouseGamePos.sub(oldMouseGamePos);
 
-  console.log(diff);
-  console.log(oldOffset);
-
   WindowData.transOffset = oldOffset.add(diff);
 }
 

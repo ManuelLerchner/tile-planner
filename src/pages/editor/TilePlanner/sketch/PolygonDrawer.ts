@@ -70,7 +70,7 @@ export function drawPolygons(p5: P5CanvasInstance) {
       .copy()
       .sub(start)
       .rotate(-p5.HALF_PI)
-      .setMag(20 + 20 * scale);
+      .setMag(20 + 5 * scale);
 
     centerScreenPos.add(offset);
 
@@ -78,8 +78,11 @@ export function drawPolygons(p5: P5CanvasInstance) {
     p5.strokeWeight(1);
     p5.stroke(0);
     p5.fill(255);
-    p5.textSize(14 + (len * scale) / 2);
-    p5.text(p5.round(len, 1), centerScreenPos.x, centerScreenPos.y);
+    p5.textSize(12 + (len / 30) * scale);
+    // p5.text(p5.round(len, 1), centerScreenPos.x, centerScreenPos.y);
+
+    p5.text(start.z , startScreenPos.x, startScreenPos.y);
+    p5.text(end.z , endScreenPos.x, endScreenPos.y);
   }
 
   //Area

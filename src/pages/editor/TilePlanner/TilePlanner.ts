@@ -40,6 +40,13 @@ export const InterfaceData = {
   tool: "Marker" as InteractTool["name"],
 };
 
+const arrowKeysPressed = {
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+};
+
 export function TilePlanner(p5: P5CanvasInstance) {
   p5.updateWithProps = (props) => {
     const dims = props.tileDims as number[];
@@ -91,8 +98,18 @@ export function TilePlanner(p5: P5CanvasInstance) {
       p5.circle(screenPos.x, screenPos.y, 15);
     }
 
-    // showMeasure();
-    // Util();
+    // move via arrow keys
+    const movementVector = new Vector(0, 0);
+    movementVector.x += arrowKeysPressed.right ? 1 : 0;
+    movementVector.x -= arrowKeysPressed.left ? 1 : 0;
+    movementVector.y += arrowKeysPressed.down ? 1 : 0;
+    movementVector.y -= arrowKeysPressed.up ? 1 : 0;
+
+    if (movementVector.magSq() > 0) {
+      const vec = new Vector(movementVector.x, movementVector.y).mult(10);
+      const pan = calculatePanMovement(vec);
+      WindowData.transOffset = WindowData.transOffset.sub(pan);
+    }
   };
 
   p5.mouseWheel = mouseWheel;
@@ -138,9 +155,11 @@ export function TilePlanner(p5: P5CanvasInstance) {
 
       if (InterfaceData.tool === "Connect") {
         const newPoint = InterfaceData.selectedPoint;
+
         if (newPoint && oldPoint) {
+          if (newPoint.equals(oldPoint)) return;
+
           addEdge(oldPoint, newPoint);
-          InterfaceData.selectedPoint = undefined;
         }
 
         return;
@@ -149,22 +168,19 @@ export function TilePlanner(p5: P5CanvasInstance) {
   };
 
   p5.mouseDragged = (e: MouseEvent) => {
-    const { scale } = WindowData;
     const { outside } = MouseData;
     const { tool } = InterfaceData;
 
     if (outside) return;
 
     const vec = new Vector(e.movementX, e.movementY);
-
     const pan = calculatePanMovement(vec);
 
     if (tool === "Align") {
       InterfaceData.tileOffset = InterfaceData.tileOffset.add(pan.div(2));
-      return;
+    } else {
+      WindowData.transOffset = WindowData.transOffset.add(pan);
     }
-
-    WindowData.transOffset = WindowData.transOffset.add(pan);
   };
 
   p5.mouseMoved = (e: MouseEvent) => {
@@ -175,6 +191,33 @@ export function TilePlanner(p5: P5CanvasInstance) {
     if (e.key === "Escape") {
       InterfaceData.selectedPoint = undefined;
       InterfaceData.newPoint = undefined;
+    }
+    if (e.key === "ArrowUp") {
+      arrowKeysPressed.up = true;
+    }
+    if (e.key === "ArrowDown") {
+      arrowKeysPressed.down = true;
+    }
+    if (e.key === "ArrowLeft") {
+      arrowKeysPressed.left = true;
+    }
+    if (e.key === "ArrowRight") {
+      arrowKeysPressed.right = true;
+    }
+  };
+
+  p5.keyReleased = (e: KeyboardEvent) => {
+    if (e.key === "ArrowUp") {
+      arrowKeysPressed.up = false;
+    }
+    if (e.key === "ArrowDown") {
+      arrowKeysPressed.down = false;
+    }
+    if (e.key === "ArrowLeft") {
+      arrowKeysPressed.left = false;
+    }
+    if (e.key === "ArrowRight") {
+      arrowKeysPressed.right = false;
     }
   };
 }
