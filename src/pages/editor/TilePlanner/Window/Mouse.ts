@@ -1,6 +1,6 @@
 import { Vector } from "p5";
 import { P5CanvasInstance } from "react-p5-wrapper";
-import { toGamePos, toScreenPos } from "./UnitConverter";
+import { toGamePos } from "./UnitConverter";
 import { WindowData } from "./Window";
 
 export const MouseData = {

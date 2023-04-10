@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useId, useState } from "react";
+import React, { useId } from "react";
 
-import PushPinIcon from "@mui/icons-material/PushPin";
-import TimelineIcon from "@mui/icons-material/Timeline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import OpenWithIcon from "@mui/icons-material/OpenWith";
 import PanToolIcon from "@mui/icons-material/PanTool";
+import PushPinIcon from "@mui/icons-material/PushPin";
+import TimelineIcon from "@mui/icons-material/Timeline";
 
 export default function HelpModal({
   setShowHelp,

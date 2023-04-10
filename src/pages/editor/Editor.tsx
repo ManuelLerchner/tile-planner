@@ -58,7 +58,7 @@ export function Editor() {
 
   const fetchData = useCallback(async () => {
     setLoaded(false);
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("drawings")
       .select("*, projects(name, description)")
       .eq("id", id)
@@ -99,13 +99,13 @@ export function Editor() {
     const dataParts = base64Image.split(",");
     const arrayBuffer = decode(dataParts[1]);
 
-    const { data, error } = await supabase.storage
+    await supabase.storage
       .from("thumbnails")
       .upload(user.id + "/" + id + ".jpg", arrayBuffer, {
         contentType: "image/jpg",
         upsert: true,
       });
-  }, [loaded, tileDims, tileOffset, tileMode, id, mesh]);
+  }, [loaded, tileDims, tileOffset, tileMode, id, mesh, user.id]);
 
   useEffect(() => {
     const interval = setInterval(() => {

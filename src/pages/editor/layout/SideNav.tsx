@@ -22,7 +22,7 @@ export default function SideNav({
           Tile Planner
         </h1>
       </div>
-      <div className="flex flex-col items-center justify-between h-full">
+      <div className="flex flex-col items-center justify-between ">
         <ul className="flex flex-col gap-4 my-8">
           {Tools.map((mode) => (
             <li

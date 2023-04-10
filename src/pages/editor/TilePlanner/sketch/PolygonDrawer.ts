@@ -45,7 +45,7 @@ export function drawPolygons(p5: P5CanvasInstance) {
   }
 
   //highlight closest
-  if (closestToMouse && tool == "Connect") {
+  if (closestToMouse && tool === "Connect") {
     const pos = toScreenPos(closestToMouse);
     p5.fill(255, 0, 0);
     p5.circle(pos.x, pos.y, 12);
@@ -79,10 +79,7 @@ export function drawPolygons(p5: P5CanvasInstance) {
     p5.stroke(0);
     p5.fill(255);
     p5.textSize(12 + (len / 30) * scale);
-    // p5.text(p5.round(len, 1), centerScreenPos.x, centerScreenPos.y);
-
-    p5.text(start.z , startScreenPos.x, startScreenPos.y);
-    p5.text(end.z , endScreenPos.x, endScreenPos.y);
+    p5.text(p5.round(len, 1), centerScreenPos.x, centerScreenPos.y);
   }
 
   //Area
