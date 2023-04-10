@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { AuthProvider } from "./components/providers/AuthProvider";
 import Login from "./pages/Login";
@@ -8,7 +8,7 @@ import { Editor } from "./pages/editor/Editor";
 
 export function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AuthProvider>
         <Routes>
           <Route path={"/auth"}>
@@ -27,6 +27,6 @@ export function App() {
           </Route>
         </Routes>
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
