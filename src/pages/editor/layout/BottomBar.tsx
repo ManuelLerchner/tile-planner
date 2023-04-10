@@ -22,8 +22,8 @@ export default function BottomBar({
   setMarkerMode: React.Dispatch<React.SetStateAction<MarkerMode>>;
 }) {
   return (
-    <div className="bg-gray-700 text-white text-2xl font-bold p-4 h-16 flex flex-row items-center justify-between px-8">
-      <div className="flex flex-row gap-2 items-center">
+    <div className="bg-gray-700 text-white text-2xl font-bold p-4 flex flex-row flex-wrap gap-4 items-center justify-between px-8">
+      <div className="flex flex-row flex-wrap gap-2 items-center">
         <label htmlFor="marker_mode" className="mr-2 text-xl">
           Marker Mode:
         </label>
@@ -52,7 +52,7 @@ export default function BottomBar({
           </>
         )}
       </div>
-      <div className="flex flex-row gap-2 items-center">
+      <div className="flex flex-row flex-wrap gap-2 items-center">
         <label htmlFor="tile_width" className="mr-2 text-xl">
           Tile:
         </label>

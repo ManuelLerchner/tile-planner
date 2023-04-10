@@ -2,6 +2,6 @@ export type Project = {
   id: string;
   name: string;
   description: string;
-  image: string;
+  thumbnail?: string;
   created_at: string;
 };

@@ -16,6 +16,7 @@ export default function EditorLayout({
   tileMode,
   setTileMode,
   setShowEdit,
+  setShowHelp,
   save,
   mainContentRef,
   children,
@@ -29,6 +30,7 @@ export default function EditorLayout({
   tileDims: [number, number];
   setTileDims: React.Dispatch<React.SetStateAction<[number, number]>>;
   setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowHelp: React.Dispatch<React.SetStateAction<boolean>>;
   tileMode: TileMode;
   setTileMode: React.Dispatch<React.SetStateAction<TileMode>>;
   save: () => Promise<void>;
@@ -40,11 +42,12 @@ export default function EditorLayout({
   return (
     <div className="flex h-screen ">
       <SideNav currentTool={interactTool} setInteractTool={setInteractTool} />
-      <div className="flex flex-col flex-1 w-full">
+      <div className="flex flex-col flex-1 w-full h-full overflow-y-auto">
         <TopBar
           mainContentRef={mainContentRef}
           save={save}
           setShowEdit={setShowEdit}
+          setShowHelp={setShowHelp}
         />
         <main className="bg-gray-800 w-full h-full">{children}</main>
         <BottomBar

@@ -9,6 +9,11 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 export default function Dashboard() {
   const { user } = useAuth();
+
+  if (!user) {
+    throw new Error("User not logged in");
+  }
+
   const [data, setData] = useState<Project[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [earliestDate, setEarliestDate] = useState<Date>(new Date());
@@ -17,7 +22,7 @@ export default function Dashboard() {
     setLoaded(false);
     const { data, error } = await supabase
       .from("projects")
-      .select("id, name, description, created_at, image")
+      .select("id, name, description, created_at")
       .eq("user_id", user?.id)
       .filter("created_at", "lt", earliestDate?.toISOString())
       .order("created_at", { ascending: false })
@@ -30,6 +35,25 @@ export default function Dashboard() {
 
     const projectData = data as Project[];
 
+    if (data.length > 0) {
+      const thumbnailsToFetch = data.map((project) => {
+        return `${user.id}/${project.id}.jpg`;
+      });
+
+      const { data: imageUrls, error: imageError } = await supabase.storage
+        .from("thumbnails")
+        .createSignedUrls(thumbnailsToFetch, 60 * 60 * 24);
+
+      if (imageError) {
+        alert(imageError.message);
+        return;
+      }
+
+      projectData.forEach((project, index) => {
+        project.thumbnail = imageUrls[index].signedUrl;
+      });
+    }
+
     setData((prev) => [...prev, ...projectData]);
 
     setLoaded(true);
@@ -40,7 +64,7 @@ export default function Dashboard() {
 
     const { data: newData, error } = await supabase
       .from("projects")
-      .select("id, name, description, created_at, image")
+      .select("id, name, description, created_at")
       .eq("user_id", user?.id)
       .order("created_at", { ascending: false })
       .limit(data.length);

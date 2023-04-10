@@ -1,6 +1,7 @@
 import HomeIcon from "@mui/icons-material/Home";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import SaveIcon from "@mui/icons-material/Save";
+import HelpIcon from "@mui/icons-material/Help";
 import React from "react";
 import ReactToPrint from "react-to-print";
 
@@ -10,10 +11,12 @@ import { useNavigate } from "react-router-dom";
 export default function TopBar({
   mainContentRef,
   setShowEdit,
+  setShowHelp,
   save,
 }: {
   mainContentRef: React.MutableRefObject<HTMLDivElement | null>;
   setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowHelp: React.Dispatch<React.SetStateAction<boolean>>;
   save: () => Promise<void>;
 }) {
   const navigate = useNavigate();
@@ -48,6 +51,20 @@ export default function TopBar({
               }}
             />
             <label className="text-gray-300 text-sm font-semibold ">Edit</label>
+          </div>
+
+          <div
+            className="flex flex-col cursor-pointer hover:scale-[105%]"
+            onClick={() => {
+              setShowHelp(true);
+            }}
+          >
+            <HelpIcon
+              style={{
+                fontSize: "2rem",
+              }}
+            />
+            <label className="text-gray-300 text-sm font-semibold ">Help</label>
           </div>
         </div>
 

@@ -12,6 +12,9 @@ import { TileMode } from "../../types/TileMode";
 import { TilePlanner } from "./TilePlanner/TilePlanner";
 import EditorLayout from "./layout/EditorLayout";
 import { MarkerMode } from "../../types/MarkerMode";
+import { decode } from "base64-arraybuffer";
+import { useAuth } from "../../hooks/useAuth";
+import HelpModal from "../../components/HelpModal";
 
 type RowEntry = {
   id: string;
@@ -29,9 +32,15 @@ type RowEntry = {
 
 export function Editor() {
   const id = useParams().id as string;
+  const { user } = useAuth();
+
+  if (!user) {
+    throw new Error("User not logged in");
+  }
 
   const [loaded, setLoaded] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [drawLength, setDrawLength] = useState(100);
   const [interactTool, setInteractTool] = useState<InteractTool>(Tools[1]);
   const [markerMode, setMarkerMode] = useState<MarkerMode>("Ortho");
@@ -72,8 +81,8 @@ export function Editor() {
     if (!node) return;
     if (!loaded) return;
 
-    const dataUrl = await htmlToImage.toJpeg(node, {
-      quality: 0.4,
+    const base64Image = await htmlToImage.toJpeg(node, {
+      quality: 0.5,
     });
 
     await supabase.from("drawings").upsert({
@@ -87,12 +96,15 @@ export function Editor() {
       updated_at: new Date().toISOString(),
     });
 
-    await supabase
-      .from("projects")
-      .update({
-        image: dataUrl,
-      })
-      .eq("id", id);
+    const dataParts = base64Image.split(",");
+    const arrayBuffer = decode(dataParts[1]);
+
+    const { data, error } = await supabase.storage
+      .from("thumbnails")
+      .upload(user.id + "/" + id + ".jpg", arrayBuffer, {
+        contentType: "image/jpg",
+        upsert: true,
+      });
   }, [loaded, tileDims, tileOffset, tileMode, id, mesh]);
 
   useEffect(() => {
@@ -165,6 +177,7 @@ export function Editor() {
       setDrawLength={setDrawLength}
       mainContentRef={mainContentRef}
       setShowEdit={setShowEdit}
+      setShowHelp={setShowHelp}
       save={save}
       markerMode={markerMode}
       setMarkerMode={setMarkerMode}
@@ -179,6 +192,8 @@ export function Editor() {
           }}
         />
       )}
+
+      {showHelp && <HelpModal setShowHelp={setShowHelp} />}
 
       {!loaded && (
         <Box

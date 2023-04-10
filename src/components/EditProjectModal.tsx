@@ -58,14 +58,14 @@ export default function EditProjectModal({
     onEdit();
   };
 
-  setTimeout(() => {
-    try {
-      const modal = document.getElementById(modalID) as HTMLInputElement;
-      modal.checked = true;
-    } catch (e) {
-      console.error(e);
-    }
-  }, 20);
+    setTimeout(() => {
+      try {
+        const modal = document.getElementById(modalID) as HTMLInputElement;
+        modal.checked = true;
+      } catch (e) {
+        console.error(e);
+      }
+    }, 20);
 
   useEffect(() => {
     fetchProject();
@@ -92,7 +92,7 @@ export default function EditProjectModal({
         }}
       >
         <label className="modal-box relative" htmlFor="">
-          <h3 className="text-lg font-bold">Edit project</h3>
+          <h3 className="text-lg font-semibold">Edit project</h3>
           <div className="flex flex-col gap-4 my-4">
             <label htmlFor="projectName">Project Name</label>
             <input

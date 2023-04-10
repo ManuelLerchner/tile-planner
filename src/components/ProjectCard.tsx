@@ -30,10 +30,10 @@ export default function ProjectCard({
       >
         <div className="relative">
           <figure>
-            {(project.image && (
+            {(project.thumbnail && (
               <img
                 className="rounded-t-md h-48 w-full object-fill border-b border-gray-700"
-                src={project.image}
+                src={project.thumbnail}
                 alt={project.name + " image"}
               />
             )) || (

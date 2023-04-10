@@ -54,7 +54,8 @@ export default function AddProjectCard() {
       <input type="checkbox" id="modal" className="modal-toggle" />
       <label htmlFor="modal" className="modal cursor-pointer">
         <label className="modal-box relative" htmlFor="">
-          <h3 className="text-lg font-bold">Create a new project</h3>
+          <h3 className="text-lg font-semibold">Create a new project</h3>
+
           <div className="flex flex-col gap-4 my-4">
             <label htmlFor="projectName">Project Name</label>
             <input
