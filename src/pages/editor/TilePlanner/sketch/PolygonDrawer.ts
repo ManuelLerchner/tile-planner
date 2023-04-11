@@ -5,6 +5,7 @@ import { InterfaceData } from "../TilePlanner";
 import { Vector } from "p5";
 import { dist2d } from "../math/Vector";
 import { MouseData } from "../Window/Mouse";
+import { Edge } from "../data/DBConverter";
 
 export function drawPolygons(p5: P5CanvasInstance) {
   const { edges, polygons } = InterfaceData.drawData;
@@ -15,8 +16,8 @@ export function drawPolygons(p5: P5CanvasInstance) {
   p5.textAlign(p5.CENTER, p5.CENTER);
 
   p5.stroke(0);
-  let closestToMouse: Vector | undefined = undefined;
-  let closestDist = Infinity;
+  let closestVertexToMouse: Vector | undefined = undefined;
+  let closestVertexDist = Infinity;
   for (let polygon of polygons) {
     //area
     p5.strokeWeight(0);
@@ -36,20 +37,16 @@ export function drawPolygons(p5: P5CanvasInstance) {
     for (let point of polygon.vectors) {
       const pos = toScreenPos(point);
       const distToMouse = dist2d(pos, mouseScreenPos);
-      if (distToMouse < closestDist && distToMouse < 30) {
-        closestDist = distToMouse;
-        closestToMouse = point;
+      if (distToMouse < closestVertexDist && distToMouse < 30) {
+        closestVertexDist = distToMouse;
+        closestVertexToMouse = point;
       }
       p5.circle(pos.x, pos.y, 12);
     }
   }
 
-  //highlight closest
-  if (closestToMouse && tool === "Connect") {
-    const pos = toScreenPos(closestToMouse);
-    p5.fill(255, 0, 0);
-    p5.circle(pos.x, pos.y, 12);
-  }
+  let closestEdgeToMouse: Edge | undefined = undefined;
+  let closestEdgeDist = Infinity;
 
   for (let edge of edges) {
     const { start, end } = edge;
@@ -58,6 +55,12 @@ export function drawPolygons(p5: P5CanvasInstance) {
     const startScreenPos = toScreenPos(start);
     const endScreenPos = toScreenPos(end);
     const centerScreenPos = toScreenPos(center);
+
+    const distToMouse = dist2d(centerScreenPos, mouseScreenPos);
+    if (distToMouse < closestEdgeDist && distToMouse < 30) {
+      closestEdgeDist = distToMouse;
+      closestEdgeToMouse = edge;
+    }
 
     const len = start.dist(end);
 
@@ -104,6 +107,33 @@ export function drawPolygons(p5: P5CanvasInstance) {
         centerOfMass.x,
         centerOfMass.y
       );
+    }
+
+    //highlight closest
+    const edge =
+      closestEdgeToMouse !== undefined && closestEdgeDist < closestVertexDist;
+    if (edge) {
+      if (closestEdgeToMouse && tool === "Delete") {
+        const { start, end } = closestEdgeToMouse;
+        const startScreenPos = toScreenPos(start);
+        const endScreenPos = toScreenPos(end);
+
+        //edge
+        p5.strokeWeight(3);
+        p5.stroke(255, 0, 0);
+        p5.line(
+          startScreenPos.x,
+          startScreenPos.y,
+          endScreenPos.x,
+          endScreenPos.y
+        );
+      }
+    } else {
+      if (closestVertexToMouse && (tool === "Delete" || tool === "Connect")) {
+        const pos = toScreenPos(closestVertexToMouse);
+        p5.fill(255, 0, 0);
+        p5.circle(pos.x, pos.y, 12);
+      }
     }
   }
 }

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useId, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../database/subabaseClient";
+import { useAuth } from "../hooks/useAuth";
 
 export default function EditProjectModal({
   projectId,
@@ -12,6 +13,12 @@ export default function EditProjectModal({
   setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
   onEdit: () => void;
 }) {
+  const { user } = useAuth();
+
+  if (!user) {
+    throw new Error("User not logged in");
+  }
+
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const modalID = useId();
@@ -35,6 +42,10 @@ export default function EditProjectModal({
 
   const deleteProject = async () => {
     await supabase.from("projects").delete().eq("id", projectId);
+    await supabase.storage
+      .from("thumbnails")
+      .remove([user.id + "/" + projectId + ".jpg"]);
+
     navigate("/");
   };
 
@@ -58,14 +69,14 @@ export default function EditProjectModal({
     onEdit();
   };
 
-    setTimeout(() => {
-      try {
-        const modal = document.getElementById(modalID) as HTMLInputElement;
-        modal.checked = true;
-      } catch (e) {
-        console.error(e);
-      }
-    }, 20);
+  setTimeout(() => {
+    try {
+      const modal = document.getElementById(modalID) as HTMLInputElement;
+      modal.checked = true;
+    } catch (e) {
+      console.error(e);
+    }
+  }, 20);
 
   useEffect(() => {
     fetchProject();

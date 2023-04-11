@@ -55,7 +55,7 @@ export function drawMarkerHelpLines(p5: P5CanvasInstance) {
     const roundedAngle = Math.round(rayAngle / (Math.PI / 4)) * (Math.PI / 4);
 
     let distMO = dist2d(mouseGamePos, selectedPoint);
-    let newPointVector = mouseGamePos;
+    let lockedPoint = mouseGamePos;
 
     const snappedVector = mouseGamePos
       .copy()
@@ -71,12 +71,12 @@ export function drawMarkerHelpLines(p5: P5CanvasInstance) {
       Math.abs(rayAngle - roundedAngle) < Math.PI / 32 &&
       distMouseSnapped < 10
     ) {
-      newPointVector = snappedVector;
-      distMO = dist2d(newPointVector, selectedPoint);
+      lockedPoint = snappedVector;
+      distMO = dist2d(lockedPoint, selectedPoint);
       rayAngle = roundedAngle;
     }
 
-    const lockedScreenPos = toScreenPos(newPointVector);
+    let lockedScreenPos = toScreenPos(lockedPoint);
 
     const { edges } = InterfaceData.drawData;
 
@@ -91,7 +91,7 @@ export function drawMarkerHelpLines(p5: P5CanvasInstance) {
 
       const intersection = rayIntersectsLine(
         selectedPoint,
-        newPointVector.copy().sub(selectedPoint),
+        lockedPoint.copy().sub(selectedPoint),
         start,
         end
       );
@@ -116,6 +116,14 @@ export function drawMarkerHelpLines(p5: P5CanvasInstance) {
 
       //intersec point
       const intersectPoint = toScreenPos(closestIntersection);
+
+      // snap to wall
+      if (dist2d(intersectPoint, mouseScreenPos) < 15) {
+        lockedPoint = closestIntersection;
+        lockedScreenPos = intersectPoint;
+        distMO = dist2d(lockedPoint, selectedPoint);
+        rayAngle = lockedPoint.copy().sub(selectedPoint).heading();
+      }
 
       p5.stroke(255, 0, 0);
       p5.strokeWeight(1);
@@ -153,14 +161,15 @@ export function drawMarkerHelpLines(p5: P5CanvasInstance) {
     }
 
     //mouse ellipse
-    p5.fill(255, 255, 0);
+    p5.fill(125, 255, 125);
     p5.stroke(0);
     p5.strokeWeight(1);
     p5.ellipse(lockedScreenPos.x, lockedScreenPos.y, 10, 10);
 
-    InterfaceData.newPoint = newPointVector;
+    InterfaceData.newPoint = lockedPoint;
 
     const centerMouseO = center(lockedScreenPos, startPoint);
+    const centerMouseOO = center(centerMouseO, startPoint);
 
     p5.fill(255, 0, 255);
     p5.stroke(0);
@@ -175,8 +184,8 @@ export function drawMarkerHelpLines(p5: P5CanvasInstance) {
     p5.textSize(15);
     p5.text(
       p5.round(rayAngleDeg, 1) + "°",
-      lockedScreenPos.x,
-      lockedScreenPos.y + 25
+      centerMouseOO.x,
+      centerMouseOO.y + 25
     );
   }
 }
