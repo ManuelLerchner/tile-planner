@@ -1,6 +1,6 @@
 # Tile Planner
 
-A Project built for my Dad to help him figure out how to optimally place tiles for his customers.
+A project built for my Dad to help him plan his next tile project. It is a simple web app that allows him to draw a floor plan and place tiles into it.
 
 Hosted at: [https://tile-planner.manuellerchner.de/](https://tile-planner.manuellerchner.de/)
 
@@ -10,8 +10,7 @@ Hosted at: [https://tile-planner.manuellerchner.de/](https://tile-planner.manuel
 - Select different tiling patterns
 - Move the tiles around to find the best layout
 - Automatically calculate the amount of tiles needed
-- Save your plans in a database
-- Edit your plans
+- Store & Edit your plans
 - Create a printable PDF of your plan
 
 ## Demo Images
@@ -20,5 +19,6 @@ Hosted at: [https://tile-planner.manuellerchner.de/](https://tile-planner.manuel
 
 ![image](https://user-images.githubusercontent.com/54124311/230743005-0d89e1f2-d45d-42f1-8028-cff4cbb5ef68.png)
 
-![image](https://user-images.githubusercontent.com/54124311/230743265-1dd79291-3b5b-4a29-af7e-def03cb0c63b.png)
+![image](https://user-images.githubusercontent.com/54124311/231230075-6dbc4056-6f36-40ef-860c-f5ee5b08afc1.png)
+
 
