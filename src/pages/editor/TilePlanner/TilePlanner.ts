@@ -121,7 +121,8 @@ export function TilePlanner(p5: P5CanvasInstance) {
     const oldPoint = InterfaceData.selectedPoint?.copy();
     const { mouseScreenPos } = MouseData;
 
-    InterfaceData.selectedPoint = nearestPoint(mouseScreenPos);
+    const [closestPoint, closestPointDist] = nearestPoint(mouseScreenPos);
+    InterfaceData.selectedPoint = closestPoint;
 
     if (MouseData.mouseButton === "LEFT") {
       if (InterfaceData.tool === "Marker") {
@@ -140,15 +141,14 @@ export function TilePlanner(p5: P5CanvasInstance) {
       }
 
       if (InterfaceData.tool === "Delete") {
-        const { selectedPoint } = InterfaceData;
-        if (selectedPoint) {
-          deletePoint(selectedPoint);
+        const [closestEdge, closestEdgeDist] = nearestEdge(mouseScreenPos);
+
+        if (closestPoint && closestPointDist < closestEdgeDist) {
+          deletePoint(closestPoint);
           InterfaceData.selectedPoint = undefined;
           return;
-        }
-        const edge = nearestEdge(mouseScreenPos);
-        if (edge) {
-          deleteEdge(edge);
+        } else if (closestEdge) {
+          deleteEdge(closestEdge);
           return;
         }
       }

@@ -3,7 +3,7 @@ import { InterfaceData } from "../TilePlanner";
 import { toScreenPos } from "../Window/UnitConverter";
 import { Edge } from "../data/DBConverter";
 
-export function nearestEdge(screenPos: Vector) {
+export function nearestEdge(screenPos: Vector): [Edge | undefined, number] {
   const { edges } = InterfaceData.drawData;
 
   const center = edges.map((edge) => {
@@ -33,5 +33,5 @@ export function nearestEdge(screenPos: Vector) {
     }
   );
 
-  return nearestEdge.edge;
+  return [nearestEdge.edge, nearestEdge.dist];
 }

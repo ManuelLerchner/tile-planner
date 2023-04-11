@@ -108,32 +108,32 @@ export function drawPolygons(p5: P5CanvasInstance) {
         centerOfMass.y
       );
     }
+  }
 
-    //highlight closest
-    const edge =
-      closestEdgeToMouse !== undefined && closestEdgeDist < closestVertexDist;
-    if (edge) {
-      if (closestEdgeToMouse && tool === "Delete") {
-        const { start, end } = closestEdgeToMouse;
-        const startScreenPos = toScreenPos(start);
-        const endScreenPos = toScreenPos(end);
+  //highlight closest
+  const edge =
+    closestEdgeToMouse !== undefined && closestEdgeDist < closestVertexDist;
+  if (edge) {
+    if (closestEdgeToMouse && tool === "Delete") {
+      const { start, end } = closestEdgeToMouse;
+      const startScreenPos = toScreenPos(start);
+      const endScreenPos = toScreenPos(end);
 
-        //edge
-        p5.strokeWeight(3);
-        p5.stroke(255, 0, 0);
-        p5.line(
-          startScreenPos.x,
-          startScreenPos.y,
-          endScreenPos.x,
-          endScreenPos.y
-        );
-      }
-    } else {
-      if (closestVertexToMouse && (tool === "Delete" || tool === "Connect")) {
-        const pos = toScreenPos(closestVertexToMouse);
-        p5.fill(255, 0, 0);
-        p5.circle(pos.x, pos.y, 12);
-      }
+      //edge
+      p5.strokeWeight(3);
+      p5.stroke(255, 0, 0);
+      p5.line(
+        startScreenPos.x,
+        startScreenPos.y,
+        endScreenPos.x,
+        endScreenPos.y
+      );
+    }
+  } else {
+    if (closestVertexToMouse && (tool === "Delete" || tool === "Connect")) {
+      const pos = toScreenPos(closestVertexToMouse);
+      p5.fill(255, 0, 0);
+      p5.circle(pos.x, pos.y, 12);
     }
   }
 }

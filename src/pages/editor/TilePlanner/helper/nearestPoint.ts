@@ -2,7 +2,7 @@ import { Vector } from "p5";
 import { InterfaceData } from "../TilePlanner";
 import { toScreenPos } from "../Window/UnitConverter";
 
-export function nearestPoint(screenPos: Vector) {
+export function nearestPoint(screenPos: Vector): [Vector | undefined, number] {
   const { polygons } = InterfaceData.drawData;
 
   const points = polygons.map((poly) => poly.vectors).flat();
@@ -27,5 +27,5 @@ export function nearestPoint(screenPos: Vector) {
     }
   );
 
-  return nearestPoint.point;
+  return [nearestPoint.point, nearestPoint.dist];
 }

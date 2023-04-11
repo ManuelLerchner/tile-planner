@@ -42,7 +42,7 @@ export default function Dashboard() {
 
       const { data: imageUrls, error: imageError } = await supabase.storage
         .from("thumbnails")
-        .createSignedUrls(thumbnailsToFetch, 60);
+        .createSignedUrls(thumbnailsToFetch, 60 * 60);
 
       if (imageError) {
         alert(imageError.message);

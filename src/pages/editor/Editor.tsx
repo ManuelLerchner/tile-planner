@@ -120,7 +120,7 @@ export function Editor() {
 
   useEffect(() => {
     setInteractTool(Tools[1]);
-  }, [markerMode]);
+  }, [markerMode, drawLength]);
 
   const ComponentToPrint = forwardRef<HTMLDivElement>((props, ref) => {
     // disable right click
