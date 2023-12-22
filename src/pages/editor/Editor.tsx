@@ -54,7 +54,7 @@ export function Editor() {
   const [tileOffset, setTileOffset] = useState(new Vector(0, 0));
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [tileMode, setTileMode] = useState<TileMode>("Interlaced");
+  const [tileMode, setTileMode] = useState<TileMode>("Straight");
 
   const fetchData = useCallback(async () => {
     setLoaded(false);

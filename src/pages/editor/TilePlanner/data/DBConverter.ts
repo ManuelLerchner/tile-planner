@@ -6,6 +6,7 @@ import { getAreaOfPolygon } from "../math/area";
 export type Polygon = {
   vectors: Vector[];
   area: number;
+  overlappingTiles?: number;
 };
 
 export type Edge = {

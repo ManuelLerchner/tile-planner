@@ -41,6 +41,9 @@ export default function HelpModal({
         onMouseDown={(e) => {
           e.stopPropagation();
         }}
+        onWheel={(e) => {
+          e.stopPropagation();
+        }}
       >
         <label className="modal-box relative w-11/12 max-w-5xl" htmlFor="">
           <h3 className="text-lg font-semibold">Tools</h3>
@@ -133,6 +136,25 @@ export default function HelpModal({
                   and their <u>pattern</u>.
                 </li>
               </ul>
+            </p>
+          </div>
+
+          <h3 className="text-lg font-semibold">Area</h3>
+          <div className="flex flex-col gap-4 my-4">
+            <p className="text-sm">
+              The program calculates two types of areas:
+              <ul className="list-disc list-inside m-2">
+                <li>
+                  <b>OV Area</b>: The <u>theoretical</u> area of the floor plan,
+                  without any loss due to cutting.
+                </li>
+                <li>
+                  <b>MV Area</b>: The <u>actual</u> area of all the tiles
+                  touching the drawn floor plan.
+                </li>
+              </ul>
+              The actual amount of tiles needed to cover the floor plan is
+              somewhere between the two.
             </p>
           </div>
           <h3 className="text-lg font-semibold">Export</h3>

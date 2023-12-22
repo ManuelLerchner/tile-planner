@@ -91,7 +91,8 @@ export function drawPolygons(p5: P5CanvasInstance) {
   p5.fill(205, 180, 105);
   for (let polygon of polygons) {
     if (polygon.vectors.length > 2) {
-      const pieces = (polygon.area * 10000) / (tileDims.x * tileDims.y);
+      const area_tile_m2 = (tileDims.x * tileDims.y) / 10000;
+      const pieces = polygon.area / area_tile_m2;
 
       const centerOfMass = new Vector(0, 0);
       for (let point of polygon.vectors) {
@@ -103,7 +104,16 @@ export function drawPolygons(p5: P5CanvasInstance) {
 
       p5.textSize(18 + polygon.area * scale);
       p5.text(
-        p5.round(polygon.area, 1) + "m² / " + p5.round(pieces, 1) + " Stk. ",
+        "OV: " +
+          p5.round(polygon.area, 1) +
+          "m² ≙ " +
+          p5.round(pieces, 1) +
+          " Stk.\n" +
+          "MV: " +
+          p5.round((polygon.overlappingTiles || 0) * area_tile_m2, 1) +
+          "m² ≙ " +
+          p5.round(polygon.overlappingTiles || 0, 1) +
+          " Stk.\n",
         centerOfMass.x,
         centerOfMass.y
       );
