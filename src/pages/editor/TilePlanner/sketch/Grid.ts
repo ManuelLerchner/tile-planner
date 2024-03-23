@@ -179,7 +179,7 @@ export function showGrid(p5: P5CanvasInstance) {
         p5.rect(S.x, S.y, E.x, E.y);
       }
     }
-  } else if (tileMode === "Interlaced") {
+  } else if (tileMode === "Interlaced 1") {
     for (let col = -padding; col < horizontalTiles + padding; col++) {
       for (let row = -padding; row < verticalTiles + padding; row++) {
         p5.fill(0, 0, 0, 0);
@@ -187,6 +187,36 @@ export function showGrid(p5: P5CanvasInstance) {
           new Vector(
             col * tileDims.x + (row % 2 === 0 ? 0 : tileDims.x / 2),
             row * tileDims.y
+          )
+        );
+
+        let rect = [
+          posStart.copy(),
+          posStart.copy().add(new Vector(tileDims.x, 0)),
+          posStart.copy().add(tileDims),
+          posStart.copy().add(new Vector(0, tileDims.y)),
+        ];
+
+        for (let poly of polygons) {
+          if (rectTouchingPolygon(rect, poly)) {
+            p5.fill(255, 0, 0, 80);
+          }
+        }
+
+        const S = toScreenPos(posStart);
+        const E = toScreenPos(posStart.add(tileDims));
+
+        p5.rect(S.x, S.y, E.x, E.y);
+      }
+    }
+  } else if (tileMode === "Interlaced 2") {
+    for (let col = -padding; col < horizontalTiles + padding; col++) {
+      for (let row = -padding; row < verticalTiles + padding; row++) {
+        p5.fill(0, 0, 0, 0);
+        const posStart = GridCorner.copy().add(
+          new Vector(
+            col * tileDims.x,
+            row * tileDims.y + (col % 2 === 0 ? 0 : tileDims.y / 2)
           )
         );
 

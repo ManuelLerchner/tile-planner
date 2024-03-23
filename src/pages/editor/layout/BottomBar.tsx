@@ -88,7 +88,8 @@ export default function BottomBar({
           onChange={(e) => setTileMode(e.target.value as TileMode)}
         >
           <option value="Straight">Straight</option>
-          <option value="Interlaced">Interlaced</option>
+          <option value="Interlaced 1">Interlaced 1</option>
+          <option value="Interlaced 2">Interlaced 2</option>
         </select>
       </div>
     </div>

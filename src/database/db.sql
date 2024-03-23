@@ -15,7 +15,7 @@ create table drawings (
     tile_dims_y float not null default 25,
     tile_offset_x float not null default 0,
     tile_offset_y float not null default 0,
-    tile_mode text not null default 'Interlaced',
+    tile_mode text not null default 'Interlaced 1',
     mesh jsonb not null default '{
         "vertices": [],
         "edges": []

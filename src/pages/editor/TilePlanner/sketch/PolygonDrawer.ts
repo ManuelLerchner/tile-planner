@@ -95,14 +95,27 @@ export function drawPolygons(p5: P5CanvasInstance) {
       const pieces = polygon.area / area_tile_m2;
 
       const centerOfMass = new Vector(0, 0);
+      let area = 0;
+      for (let i = 0; i < polygon.vectors.length; i++) {
+        const p1 = polygon.vectors[i];
+        const p2 = polygon.vectors[(i + 1) % polygon.vectors.length];
+
+        const a = p1.x * p2.y - p2.x * p1.y;
+
+        centerOfMass.x += (p1.x + p2.x) * a;
+        centerOfMass.y += (p1.y + p2.y) * a;
+        area += a;
+      }
+      centerOfMass.div(3 * area);
+
+      const centerScreenPos = toScreenPos(centerOfMass);
+
       for (let point of polygon.vectors) {
         const pos = toScreenPos(point);
-        centerOfMass.add(pos);
         p5.vertex(pos.x, pos.y);
       }
-      centerOfMass.div(polygon.vectors.length);
 
-      p5.textSize(18 + polygon.area * scale);
+      p5.textSize(16 + polygon.area * scale);
       p5.text(
         "OV: " +
           p5.round(polygon.area, 1) +
@@ -114,8 +127,8 @@ export function drawPolygons(p5: P5CanvasInstance) {
           "m² ≙ " +
           p5.round(polygon.overlappingTiles || 0, 1) +
           " Stk.\n",
-        centerOfMass.x,
-        centerOfMass.y
+        centerScreenPos.x,
+        centerScreenPos.y
       );
     }
   }
