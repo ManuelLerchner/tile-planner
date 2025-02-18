@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/dashboard/Dashboard";
 import DashboardLayout from "./pages/dashboard/layout/DashboardLayout";
 import { Editor } from "./pages/editor/Editor";
+import KeepAlive from "./components/KeepAlive";
 
 export function App() {
   return (
@@ -13,6 +14,7 @@ export function App() {
         <Routes>
           <Route path={"/auth"}>
             <Route path={"login/"} element={<Login />} />
+            <Route path={"keep-alive"} element={<KeepAlive />} />
           </Route>
 
           <Route path={"/"} element={<ProtectedRoute />}>
