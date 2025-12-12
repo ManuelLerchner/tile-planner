@@ -64,7 +64,7 @@ function pointInPolygon(point: Vector, poly: Vector[]) {
       yj = poly[j].y;
 
     const intersect =
-      yi > point.y !== yj > point.y &&
+      (yi > point.y) !== (yj > point.y) &&
       point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
     if (intersect) inside = !inside;
   }
