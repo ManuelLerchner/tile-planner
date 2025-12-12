@@ -5,7 +5,7 @@ export default function KeepAlive() {
   let [data, setData] = useState<any[]>([]);
 
   const fetchNewData = useCallback(async () => {
-    const { data, error } = await supabase.from("keep-alive").select("*");
+    const { data } = await supabase.from("keep-alive").select("*");
     if (data) {
       setData(data);
     }
