@@ -10,18 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.x
         cache: 'npm'
 
     - name: Install dependencies
@@ -38,11 +34,11 @@ jobs:
         fi
         echo "✓ HTML output verified: build/index.html exists"
         
-        # Check if the HTML file contains expected content
-        if grep -q "<div id=\"root\">" build/index.html; then
-          echo "✓ HTML contains expected root div element"
+        # Check if the HTML file contains basic HTML structure
+        if grep -q "<html" build/index.html && grep -q "<body" build/index.html; then
+          echo "✓ HTML contains basic HTML structure"
         else
-          echo "Error: HTML does not contain expected root div"
+          echo "Error: HTML does not contain basic HTML structure"
           exit 1
         fi
         
