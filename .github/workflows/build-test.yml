@@ -35,7 +35,7 @@ jobs:
         echo "✓ HTML output verified: build/index.html exists"
         
         # Check if the HTML file contains basic HTML structure
-        if grep -q "<html" build/index.html && grep -q "<body" build/index.html; then
+        if grep -qE '<html[[:space:]>]' build/index.html && grep -qE '<body[[:space:]>]' build/index.html; then
           echo "✓ HTML contains basic HTML structure"
         else
           echo "Error: HTML does not contain basic HTML structure"
