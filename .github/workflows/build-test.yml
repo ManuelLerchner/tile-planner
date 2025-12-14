@@ -1,0 +1,58 @@
+name: Build Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+
+    - name: Verify HTML output exists
+      run: |
+        if [ ! -f "build/index.html" ]; then
+          echo "Error: build/index.html not found!"
+          exit 1
+        fi
+        echo "✓ HTML output verified: build/index.html exists"
+        
+        # Check if the HTML file contains expected content
+        if grep -q "<div id=\"root\">" build/index.html; then
+          echo "✓ HTML contains expected root div element"
+        else
+          echo "Error: HTML does not contain expected root div"
+          exit 1
+        fi
+        
+        # Display build directory structure
+        echo "Build directory contents:"
+        ls -lh build/
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: build/
+        retention-days: 7
