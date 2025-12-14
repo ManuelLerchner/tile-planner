@@ -1,0 +1,57 @@
+name: Build Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+
+    - name: Verify HTML output exists
+      run: |
+        if [ ! -f "build/index.html" ]; then
+          echo "Error: build/index.html not found!"
+          exit 1
+        fi
+        echo "✓ HTML output verified: build/index.html exists"
+        
+        # Check if the HTML file contains basic HTML structure
+        if grep -qE '<html[[:space:]>]' build/index.html && grep -qE '<body[[:space:]>]' build/index.html; then
+          echo "✓ HTML contains basic HTML structure"
+        else
+          echo "Error: HTML does not contain basic HTML structure"
+          exit 1
+        fi
+        
+        # Display build directory structure
+        echo "Build directory contents:"
+        ls -lh build/
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: build/
+        retention-days: 7
