@@ -2,6 +2,9 @@ import React from "react";
 import { TileMode } from "../../../types/TileMode";
 import { MarkerMode } from "../../../types/MarkerMode";
 
+const inputCls =
+  "bg-slate-700 border border-slate-600 text-white rounded-lg px-3 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-teal-500";
+
 export default function BottomBar({
   drawLength,
   setDrawLength,
@@ -22,15 +25,14 @@ export default function BottomBar({
   setMarkerMode: React.Dispatch<React.SetStateAction<MarkerMode>>;
 }) {
   return (
-    <div className="bg-gray-700 text-white text-2xl font-bold p-4 flex flex-row flex-wrap gap-4 items-center justify-between px-8">
+    <div className="bg-slate-800 border-t border-slate-700 text-white px-6 py-3 flex flex-row flex-wrap gap-4 items-center justify-between flex-shrink-0">
       <div className="flex flex-row flex-wrap gap-2 items-center">
-        <label htmlFor="marker_mode" className="mr-2 text-xl">
+        <label htmlFor="marker_mode" className="text-sm font-semibold text-slate-300 mr-1">
           Marker Mode:
         </label>
         <select
-          name="marker_mode"
           id="marker_mode"
-          className="bg-gray-800 text-white p-2 rounded-lg text-center w-36"
+          className={inputCls + " w-32"}
           value={markerMode}
           onChange={(e) => setMarkerMode(e.target.value as MarkerMode)}
         >
@@ -42,48 +44,37 @@ export default function BottomBar({
           <>
             <input
               type="number"
-              className="w-32 bg-gray-800 text-white p-2 rounded-lg text-center"
-              name="length"
-              id="length"
+              className={inputCls + " w-24"}
               value={drawLength}
               onChange={(e) => setDrawLength(parseFloat(e.target.value))}
             />
-            <span className="text-xl">cm</span>
+            <span className="text-sm text-slate-300">cm</span>
           </>
         )}
       </div>
+
       <div className="flex flex-row flex-wrap gap-2 items-center">
-        <label htmlFor="tile_width" className="mr-2 text-xl">
-          Tile:
-        </label>
+        <label className="text-sm font-semibold text-slate-300 mr-1">Tile:</label>
         <input
           type="number"
-          className="w-24 bg-gray-800 text-white p-2 rounded-lg text-center"
-          name="tile_width"
-          id="tile_width"
+          className={inputCls + " w-20"}
           value={tileDims[0]}
-          onChange={(e) => {
-            const newWidth = parseFloat(e.target.value);
-            setTileDims((old) => [newWidth, old[1]]);
-          }}
+          onChange={(e) =>
+            setTileDims((old) => [parseFloat(e.target.value), old[1]])
+          }
         />
-        <span className="text-2xl">x</span>
+        <span className="text-slate-400">×</span>
         <input
           type="number"
-          className="w-24 bg-gray-800 text-white p-2 rounded-lg text-center"
-          name="tile_width"
-          id="tile_width"
+          className={inputCls + " w-20"}
           value={tileDims[1]}
-          onChange={(e) => {
-            const newHeight = parseFloat(e.target.value);
-            setTileDims((old) => [old[0], newHeight]);
-          }}
+          onChange={(e) =>
+            setTileDims((old) => [old[0], parseFloat(e.target.value)])
+          }
         />
-        <span className="text-xl mx-2">cm</span>
+        <span className="text-sm text-slate-300 mr-2">cm</span>
         <select
-          name="tile_mode"
-          id="tile_mode"
-          className="bg-gray-800 text-white p-2 rounded-lg text-center"
+          className={inputCls + " w-36"}
           value={tileMode}
           onChange={(e) => setTileMode(e.target.value as TileMode)}
         >

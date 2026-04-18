@@ -49,7 +49,7 @@ export default function EditorLayout({
           setShowEdit={setShowEdit}
           setShowHelp={setShowHelp}
         />
-        <main className="bg-gray-800 w-full h-full">{children}</main>
+        <main className="bg-slate-900 w-full h-full">{children}</main>
         <BottomBar
           drawLength={drawLength}
           setDrawLength={setDrawLength}
