@@ -86,7 +86,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col flex-1">
-      <h1 className="text-2xl text-white font-semibold">
+      <h1 className="text-2xl font-bold text-white">
         {user?.user_metadata.full_name + "'s Projects"}
       </h1>
 
@@ -94,8 +94,10 @@ export default function Dashboard() {
         <AddProjectCard />
       </div>
 
-      <h2 className="text-2xl text-white font-semibold">Recent Projects</h2>
-      <div className="flex flex-row flex-wrap gap-8 my-8">
+      <h2 className="text-lg font-semibold text-slate-300 uppercase tracking-wider mb-6">
+        Recent Projects
+      </h2>
+      <div className="flex flex-row flex-wrap gap-6 my-2 justify-center">
         {(!loaded && (
           <div className="flex flex-row justify-center items-center w-full h-full">
             <Box sx={{ display: "flex" }}>

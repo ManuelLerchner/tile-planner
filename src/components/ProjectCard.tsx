@@ -25,53 +25,51 @@ export default function ProjectCard({
       )}
 
       <div
-        className="card w-96 bg-gray-800 shadow-2xl cursor-pointer hover:scale-[102%]"
+        className="w-72 bg-slate-800 rounded-xl border border-slate-700 hover:border-slate-500 shadow-xl cursor-pointer hover:scale-[102%] transition-all duration-150 overflow-hidden"
         onClick={() => navigate("/editor/" + project.id)}
       >
         <div className="relative">
-          <figure>
-            {(project.thumbnail && (
-              <img
-                className="rounded-t-md h-48 w-full object-fill border-b border-gray-700"
-                src={project.thumbnail}
-                alt={project.name + " image"}
-              />
-            )) || (
-              <div className="rounded-t-md w-full h-48 bg-gray-700 flex items-center justify-center">
-                <span className="text-4xl text-gray-400 drop-shadow-lg">
-                  📁
-                </span>
-              </div>
-            )}
-            <div className="card-actions text-yellow-300 absolute bottom-2 right-2">
-              <div className="badge badge-outline">
-                {new Date(project.created_at).toLocaleDateString("gb-GB", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }) +
-                  " - " +
-                  new Date(project.created_at).toLocaleTimeString("gb-GB", {
-                    hour: "numeric",
-                    minute: "numeric",
-                  })}
-              </div>
-            </div>
-          </figure>
-        </div>
-        <div className="card-body text-white pt-2">
-          <div className="flex flex-row justify-between items-center">
-            <h2 className="card-title">{project.name}</h2>
-            <Edit
-              className="m-4 text-green-500 hover:scale-110"
-              onMouseDown={(e) => e.stopPropagation()}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowEdit(true);
-              }}
+          {project.thumbnail ? (
+            <img
+              className="w-full h-44 object-cover"
+              src={project.thumbnail}
+              alt={project.name}
             />
+          ) : (
+            <div className="w-full h-44 bg-slate-700 flex items-center justify-center">
+              <span className="text-4xl text-slate-500">📁</span>
+            </div>
+          )}
+          <div className="absolute bottom-2 right-2">
+            <span className="bg-black/50 text-slate-300 text-xs px-2 py-1 rounded-md backdrop-blur-sm">
+              {new Date(project.created_at).toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
           </div>
-          <p className="text-gray-400 text-sm">{project.description}</p>
+        </div>
+
+        <div className="px-4 py-3 flex items-center justify-between">
+          <div className="min-w-0">
+            <h2 className="text-white font-semibold truncate">{project.name}</h2>
+            {project.description && (
+              <p className="text-slate-400 text-sm truncate mt-0.5">
+                {project.description}
+              </p>
+            )}
+          </div>
+          <button
+            className="ml-3 p-1.5 rounded-lg text-slate-400 hover:text-teal-400 hover:bg-slate-700 transition-colors flex-shrink-0"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowEdit(true);
+            }}
+          >
+            <Edit fontSize="small" />
+          </button>
         </div>
       </div>
     </>

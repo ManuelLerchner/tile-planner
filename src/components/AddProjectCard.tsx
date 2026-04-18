@@ -102,20 +102,15 @@ export default function AddProjectCard() {
       )}
 
       <div
-        className="card w-96 bg-gray-800 shadow-2xl cursor-pointer hover:scale-[102%]"
+        className="w-72 bg-slate-800 rounded-xl border border-slate-700 hover:border-teal-500/60 shadow-xl cursor-pointer hover:scale-[102%] transition-all duration-150 overflow-hidden"
         onClick={() => setIsOpen(true)}
       >
-        <figure className="h-32">
-          <AddIcon
-            style={{
-              fontSize: 100,
-              color: "white",
-            }}
-          />
-        </figure>
-        <div className="card-body text-white pt-2">
-          <h2 className="card-title">New Project</h2>
-          <p>Create a new project</p>
+        <div className="h-44 flex items-center justify-center bg-slate-700/50">
+          <AddIcon style={{ fontSize: 64, color: "#2dd4bf" }} />
+        </div>
+        <div className="px-4 py-3">
+          <h2 className="text-white font-semibold">New Project</h2>
+          <p className="text-slate-400 text-sm mt-0.5">Create a new project</p>
         </div>
       </div>
     </>
